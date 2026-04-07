@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Align — Onboarding</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="phone phone--onboarding" style="display: flex; flex-direction: column; gap: 24px">
+      <div class="onboarding-content" style="display: flex; flex-direction: column; gap: 24px">
+        <p class="logo-gradient logo-gradient--medium" style="margin-top: 8px">Align</p>
+
+        <input class="pill pill--field pill--input" type="text" name="name" placeholder="Name" aria-label="Name" autocomplete="name" />
+
+        <div class="pill-row" role="group" aria-label="Join or create a group">
+          <button type="button" aria-pressed="false">Join Group</button>
+          <button type="button" class="is-active" aria-pressed="true">Create Group</button>
+        </div>
+
+        <input class="pill pill--field pill--input" type="url" name="link" placeholder="Link" aria-label="Link" autocomplete="url" />
+      </div>
+
+      <a
+        class="figma-car figma-car--onboarding figma-car--link"
+        href="home.html"
+        aria-label="Continue to home"
+      >
+        <div class="figma-car__crop">
+          <img
+            src="https://www.figma.com/api/mcp/asset/0a9adf08-6a4c-406b-824c-9ee611e47edd"
+            alt=""
+          />
+        </div>
+      </a>
+    </main>
+    <script>
+      (function () {
+        var row = document.querySelector(".pill-row");
+        if (!row) return;
+        var buttons = row.querySelectorAll("button");
+        function setActive(index) {
+          buttons.forEach(function (btn, i) {
+            var on = i === index;
+            btn.classList.toggle("is-active", on);
+            btn.setAttribute("aria-pressed", on ? "true" : "false");
+          });
+        }
+        buttons.forEach(function (btn, i) {
+          btn.addEventListener("click", function () {
+            setActive(i);
+          });
+        });
+      })();
+    </script>
+  </body>
+</html>
