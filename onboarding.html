@@ -1,57 +1,655 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Align — Onboarding</title>
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <main class="phone phone--onboarding" style="display: flex; flex-direction: column; gap: 24px">
-      <div class="onboarding-content" style="display: flex; flex-direction: column; gap: 24px">
-        <p class="logo-gradient logo-gradient--medium" style="margin-top: 8px">Align</p>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Onboarding</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --light-bg: #eceef3;
+      --light-body-text: #1a1f29;
+      --card-radius: 18px;
+      --frame-radius: 40px;
+      --font-main: Arial, sans-serif;
+      --dur-page: 420ms;
+      --ease-smooth: cubic-bezier(0.22, 0.65, 0.18, 1);
+      --shadow-frame: 18px 18px 34px rgba(199, 206, 220, 0.82), -16px -16px 30px rgba(255, 255, 255, 0.98);
+      --shadow-card: 12px 12px 22px rgba(193, 201, 214, 0.62), -10px -10px 20px rgba(255, 255, 255, 0.97), inset 1px 1px 0 rgba(255, 255, 255, 0.76);
+      --shadow-slider: -2px 0 0 rgba(255, 255, 255, 0.68), 6px 8px 14px rgba(196, 203, 216, 0.36), inset 1px 1px 0 rgba(255, 255, 255, 0.62), inset -1px -1px 0 rgba(208, 214, 224, 0.34);
+    }
 
-        <input class="pill pill--field pill--input" type="text" name="name" placeholder="Name" aria-label="Name" autocomplete="name" />
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: var(--light-bg);
+      color: var(--light-body-text);
+      font-family: var(--font-main);
+    }
 
-        <div class="pill-row" role="group" aria-label="Join or create a group">
-          <button type="button" aria-pressed="false">Join Group</button>
-          <button type="button" class="is-active" aria-pressed="true">Create Group</button>
-        </div>
+    .frame {
+      position: relative;
+      width: 402px;
+      height: 874px;
+      border-radius: var(--frame-radius);
+      background: var(--light-bg);
+      box-shadow: var(--shadow-frame);
+      overflow: hidden;
+    }
 
-        <input class="pill pill--field pill--input" type="url" name="link" placeholder="Link" aria-label="Link" autocomplete="url" />
-      </div>
+    .frame.page-slide-enter {
+      animation: pageSlideInFromRight var(--dur-page) var(--ease-smooth) both;
+    }
 
-      <a
-        class="figma-car figma-car--onboarding figma-car--link"
-        href="home.html"
-        aria-label="Continue to home"
-      >
-        <div class="figma-car__crop">
-          <img
-            src="https://www.figma.com/api/mcp/asset/0a9adf08-6a4c-406b-824c-9ee611e47edd"
-            alt=""
-          />
-        </div>
+    @keyframes pageSlideInFromRight {
+      from {
+        transform: translateX(52px);
+        opacity: 0.88;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    .box {
+      position: absolute;
+      border: 0;
+      border-radius: var(--card-radius);
+      background: var(--light-bg);
+      box-shadow: var(--shadow-card);
+    }
+
+    #onboarding1-1 {
+      left: 87px;
+      top: 89px;
+      width: 218px;
+      height: 140px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    #onboarding1-2 {
+      left: 86px;
+      top: 310px;
+      width: 227px;
+      height: 94px;
+      display: grid;
+      align-items: center;
+      padding: 0 20px;
+      box-sizing: border-box;
+    }
+
+    #onboarding1-3 {
+      left: 86px;
+      top: 446px;
+      width: 230px;
+      height: 95px;
+      border-radius: var(--card-radius);
+      background: var(--light-bg);
+      box-shadow: 8px 8px 16px rgba(200, 206, 217, 0.5), -8px -8px 16px rgba(255, 255, 255, 0.92), inset 1px 1px 0 rgba(255, 255, 255, 0.72);
+      overflow: visible;
+      cursor: pointer;
+    }
+
+    #onboarding1-3::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: -8px;
+      transform: translateX(-50%);
+      width: 62%;
+      height: 18px;
+      border-radius: 999px;
+      background: rgba(189, 198, 212, 0.45);
+      filter: blur(12px);
+    }
+
+    .slider-thumb {
+      position: absolute;
+      width: 120px;
+      top: 0;
+      left: 110px;
+      height: 100%;
+      border-radius: var(--card-radius);
+      background: var(--light-bg);
+      box-shadow: var(--shadow-slider);
+      transition: left 220ms ease, width 220ms ease;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    #onboarding1-3[data-active="left"] .slider-thumb {
+      left: 0;
+      width: 110px;
+    }
+
+    #onboarding1-3[data-active="right"] .slider-thumb {
+      left: 110px;
+      width: 120px;
+    }
+
+    .split-hit {
+      position: absolute;
+      top: 0;
+      height: 100%;
+      border: 0;
+      background: transparent;
+      padding: 0;
+      z-index: 2;
+      color: var(--light-body-text);
+      font-family: var(--font-main);
+      font-size: 12pt;
+      text-align: center;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .split-hit.left {
+      left: 0;
+      width: 110px;
+    }
+
+    .split-hit.right {
+      right: 0;
+      width: 120px;
+    }
+
+    #onboarding1-4 {
+      left: 137px;
+      top: 733px;
+      width: 148px;
+      height: 66px;
+      display: grid;
+      place-items: center;
+      overflow: visible;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    .modal-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(23, 30, 43, 0.42);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 180ms ease;
+      z-index: 8;
+    }
+
+    .group-link-card {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, calc(-50% + 12px)) scale(0.98);
+      width: 297px;
+      height: 258px;
+      border-radius: 30px;
+      background: var(--light-bg);
+      box-shadow: 3px 3px 6px rgba(209, 214, 224, 0.28), -3px -3px 6px rgba(255, 255, 255, 0.72);
+      box-sizing: border-box;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 180ms ease, transform 180ms ease;
+      z-index: 12;
+      overflow: hidden;
+    }
+
+    .group-link-card.visible {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+      pointer-events: auto;
+    }
+
+    .modal-backdrop.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .group-link-label {
+      position: absolute;
+      margin: 0;
+      left: 95px;
+      width: 119px;
+      height: 39px;
+      font-size: 16px;
+      line-height: 39px;
+      color: var(--light-body-text);
+    }
+
+    .group-link-label.link {
+      top: 21px;
+      width: 106px;
+    }
+
+    .group-link-label.name {
+      top: 107px;
+    }
+
+    .group-field {
+      position: absolute;
+      left: 42px;
+      width: 212px;
+      height: 39px;
+      border: 0;
+      border-radius: 12px;
+      background: #cfd6e6;
+      box-sizing: border-box;
+      padding: 0 12px;
+      outline: none;
+      font-family: var(--font-main);
+      font-size: 14px;
+      color: var(--light-body-text);
+      box-shadow: 6px 6px 12px rgba(185, 192, 206, 0.48), -5px -5px 12px rgba(255, 255, 255, 0.78), inset 1px 1px 0 rgba(255, 255, 255, 0.55);
+    }
+
+    .group-field.link {
+      top: 60px;
+    }
+
+    .group-field.name {
+      top: 139px;
+    }
+
+    .group-link-output {
+      padding-right: 8px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .group-create-btn {
+      position: absolute;
+      left: 97px;
+      top: 215px;
+      width: 112px;
+      height: 27px;
+      border: 0;
+      border-radius: 20px;
+      background: #cfd8e7;
+      color: var(--light-body-text);
+      padding: 0;
+      font-size: 14px;
+      font-family: var(--font-main);
+      cursor: pointer;
+    }
+
+    .join-group-card {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, calc(-50% + 12px)) scale(0.98);
+      width: 297px;
+      height: 258px;
+      border-radius: 30px;
+      background: var(--light-bg);
+      box-shadow: 3px 3px 6px rgba(209, 214, 224, 0.28), -3px -3px 6px rgba(255, 255, 255, 0.72);
+      box-sizing: border-box;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 180ms ease, transform 180ms ease;
+      z-index: 12;
+      overflow: hidden;
+    }
+
+    .join-group-card.visible {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+      pointer-events: auto;
+    }
+
+    .join-link-label {
+      position: absolute;
+      margin: 0;
+      left: 95px;
+      top: 68px;
+      width: 103px;
+      height: 39px;
+      font-size: 16px;
+      line-height: 39px;
+      color: var(--light-body-text);
+    }
+
+    .join-link-input {
+      position: absolute;
+      left: 42px;
+      top: 114px;
+      width: 212px;
+      height: 39px;
+      border: 0;
+      border-radius: 12px;
+      background: #cfd6e6;
+      box-sizing: border-box;
+      padding: 0 12px;
+      outline: none;
+      font-family: var(--font-main);
+      font-size: 14px;
+      color: var(--light-body-text);
+      box-shadow: 6px 6px 12px rgba(185, 192, 206, 0.48), -5px -5px 12px rgba(255, 255, 255, 0.78), inset 1px 1px 0 rgba(255, 255, 255, 0.55);
+    }
+
+    .join-group-btn {
+      position: absolute;
+      left: 92px;
+      top: 220px;
+      width: 112px;
+      height: 27px;
+      border: 0;
+      border-radius: 20px;
+      background: #cfd8e7;
+      color: var(--light-body-text);
+      padding: 0;
+      font-size: 14px;
+      font-family: var(--font-main);
+      cursor: pointer;
+    }
+
+    .join-status {
+      position: absolute;
+      left: 24px;
+      right: 24px;
+      top: 182px;
+      margin: 0;
+      min-height: 16px;
+      font-size: 12px;
+      line-height: 1.25;
+      color: var(--light-body-text);
+      text-align: center;
+    }
+
+    .editable-input {
+      font-family: var(--font-main);
+      font-size: 22px;
+      color: var(--light-body-text);
+      width: 100%;
+      border: 0;
+      background: transparent;
+      outline: none;
+      padding: 0;
+    }
+
+    .editable-input::placeholder {
+      color: rgb(26 31 41 / 0.42);
+    }
+
+    .car-image {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .car-link {
+      width: 100%;
+      height: 100%;
+      display: block;
+      cursor: pointer;
+    }
+
+    .align-logo {
+      margin: 0;
+      font-family: "Chakra Petch", sans-serif;
+      font-size: 96px;
+      font-weight: 400;
+      line-height: normal;
+      letter-spacing: 0.01em;
+      color: #000;
+      text-align: center;
+      user-select: none;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <div id="onboarding1-1" class="box">
+      <p class="align-logo">Align</p>
+    </div>
+    <div id="onboarding1-2" class="box">
+      <input id="profileNameInput" class="editable-input" type="text" placeholder="Name" />
+    </div>
+    <div id="onboarding1-3" class="box" data-active="right">
+      <div class="slider-thumb" aria-hidden="true"></div>
+      <button class="split-hit left" type="button">Create Group</button>
+      <button class="split-hit right" type="button">Join Group</button>
+    </div>
+    <div id="modalBackdrop" class="modal-backdrop" aria-hidden="true"></div>
+    <section id="groupLinkCard" class="group-link-card" aria-live="polite" aria-hidden="true">
+      <p class="group-link-label link">Group Link:</p>
+      <input id="groupLinkOutput" class="group-field group-link-output link" type="text" readonly value="" />
+      <p class="group-link-label name">Group Name:</p>
+      <input id="groupNameInput" class="group-field name" type="text" value="" />
+      <button id="createGroupCardBtn" class="group-create-btn" type="button">Create</button>
+    </section>
+    <section id="joinGroupCard" class="join-group-card" aria-live="polite" aria-hidden="true">
+      <p class="join-link-label">Insert Link:</p>
+      <input id="joinGroupLinkInput" class="join-link-input" type="text" value="" />
+      <p id="joinGroupStatus" class="join-status"></p>
+      <button id="joinGroupCardBtn" class="join-group-btn" type="button">Join</button>
+    </section>
+    <div id="onboarding1-4" class="box">
+      <a href="request.html" class="car-link" aria-label="Go to request page">
+        <img src="Assets/Car.png" alt="Car" class="car-image" />
       </a>
-    </main>
-    <script>
-      (function () {
-        var row = document.querySelector(".pill-row");
-        if (!row) return;
-        var buttons = row.querySelectorAll("button");
-        function setActive(index) {
-          buttons.forEach(function (btn, i) {
-            var on = i === index;
-            btn.classList.toggle("is-active", on);
-            btn.setAttribute("aria-pressed", on ? "true" : "false");
-          });
+    </div>
+  </div>
+  <script>
+    const frame = document.querySelector(".frame");
+    const split = document.getElementById("onboarding1-3");
+    const leftBtn = split.querySelector(".split-hit.left");
+    const rightBtn = split.querySelector(".split-hit.right");
+    const carLink = document.querySelector(".car-link");
+    const profileNameInput = document.getElementById("profileNameInput");
+    const modalBackdrop = document.getElementById("modalBackdrop");
+    const groupLinkCard = document.getElementById("groupLinkCard");
+    const joinGroupCard = document.getElementById("joinGroupCard");
+    const groupLinkOutput = document.getElementById("groupLinkOutput");
+    const groupNameInput = document.getElementById("groupNameInput");
+    const createGroupCardBtn = document.getElementById("createGroupCardBtn");
+    const joinGroupLinkInput = document.getElementById("joinGroupLinkInput");
+    const joinGroupCardBtn = document.getElementById("joinGroupCardBtn");
+    const joinGroupStatus = document.getElementById("joinGroupStatus");
+    const carSlideTarget = sessionStorage.getItem("carSlideTarget");
+
+    const GROUP_LINK_BASE = "https://public-utility.app/join";
+    const PROFILE_NAME_KEY = "publicUtility.profileName";
+    const GROUPS_BY_PROFILE_KEY = "publicUtility.groupsByProfile";
+    const navEntry = performance.getEntriesByType("navigation")[0];
+    const isReload = navEntry ? navEntry.type === "reload" : performance.navigation?.type === 1;
+
+    if (isReload) {
+      localStorage.removeItem(PROFILE_NAME_KEY);
+      localStorage.removeItem(GROUPS_BY_PROFILE_KEY);
+    }
+
+    const getRandomToken = (length = 10) => {
+      const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789";
+      const bytes = new Uint8Array(length);
+      const cryptoObj = window.crypto || window.msCrypto;
+
+      if (cryptoObj?.getRandomValues) {
+        cryptoObj.getRandomValues(bytes);
+      } else {
+        for (let i = 0; i < length; i += 1) {
+          bytes[i] = Math.floor(Math.random() * 256);
         }
-        buttons.forEach(function (btn, i) {
-          btn.addEventListener("click", function () {
-            setActive(i);
-          });
-        });
-      })();
-    </script>
-  </body>
+      }
+
+      let token = "";
+      for (let i = 0; i < length; i += 1) {
+        token += alphabet[bytes[i] % alphabet.length];
+      }
+      return token;
+    };
+
+    const buildGroupLink = () => `${GROUP_LINK_BASE}?code=${getRandomToken(12)}`;
+
+    const normalizeProfileKey = (name) => (name || "Guest").trim().toLowerCase();
+
+    const getCurrentProfileName = () => {
+      const typedName = profileNameInput?.value?.trim();
+      if (typedName) return typedName;
+      return localStorage.getItem(PROFILE_NAME_KEY)?.trim() || "Guest";
+    };
+
+    const saveProfileName = (name) => {
+      const trimmedName = name.trim();
+      localStorage.setItem(PROFILE_NAME_KEY, trimmedName || "Guest");
+    };
+
+    const persistCreatedGroup = (groupName, link) => {
+      const profileName = getCurrentProfileName();
+      const profileKey = normalizeProfileKey(profileName);
+      const allGroups = JSON.parse(localStorage.getItem(GROUPS_BY_PROFILE_KEY) || "{}");
+      const existingGroups = Array.isArray(allGroups[profileKey]) ? allGroups[profileKey] : [];
+      const cleanedGroupName = groupName.trim();
+      const entry = { name: cleanedGroupName, link, createdAt: Date.now() };
+      const deduped = [entry, ...existingGroups.filter((item) => item.name !== cleanedGroupName)].slice(0, 20);
+      allGroups[profileKey] = deduped;
+      localStorage.setItem(GROUPS_BY_PROFILE_KEY, JSON.stringify(allGroups));
+    };
+
+    const findGroupByLink = (link) => {
+      const allGroups = JSON.parse(localStorage.getItem(GROUPS_BY_PROFILE_KEY) || "{}");
+      const trimmedLink = (link || "").trim();
+      const profileKeys = Object.keys(allGroups);
+      for (const key of profileKeys) {
+        const groups = Array.isArray(allGroups[key]) ? allGroups[key] : [];
+        const match = groups.find((group) => (group.link || "").trim() === trimmedLink);
+        if (match) return match;
+      }
+      return null;
+    };
+
+    const addGroupToCurrentProfile = (group) => {
+      const profileName = getCurrentProfileName();
+      const profileKey = normalizeProfileKey(profileName);
+      const allGroups = JSON.parse(localStorage.getItem(GROUPS_BY_PROFILE_KEY) || "{}");
+      const existingGroups = Array.isArray(allGroups[profileKey]) ? allGroups[profileKey] : [];
+      const merged = [
+        { name: group.name, link: group.link, createdAt: group.createdAt || Date.now() },
+        ...existingGroups.filter((item) => item.name !== group.name && item.link !== group.link)
+      ].slice(0, 20);
+      allGroups[profileKey] = merged;
+      localStorage.setItem(GROUPS_BY_PROFILE_KEY, JSON.stringify(allGroups));
+    };
+
+    const POPUP_OPEN_DELAY_MS = 220;
+    let openModalTimerId = null;
+
+    const clearOpenModalTimer = () => {
+      if (openModalTimerId !== null) {
+        clearTimeout(openModalTimerId);
+        openModalTimerId = null;
+      }
+    };
+
+    const scheduleModalOpen = (modalType) => {
+      clearOpenModalTimer();
+      openModalTimerId = window.setTimeout(() => {
+        openModalTimerId = null;
+        setModalOpen(modalType);
+      }, POPUP_OPEN_DELAY_MS);
+    };
+
+    const setModalOpen = (modalType) => {
+      if (modalType == null) {
+        clearOpenModalTimer();
+      }
+      const showCreate = modalType === "create";
+      const showJoin = modalType === "join";
+      groupLinkCard?.classList.toggle("visible", showCreate);
+      joinGroupCard?.classList.toggle("visible", showJoin);
+      modalBackdrop?.classList.toggle("visible", showCreate || showJoin);
+      groupLinkCard?.setAttribute("aria-hidden", String(!showCreate));
+      joinGroupCard?.setAttribute("aria-hidden", String(!showJoin));
+      modalBackdrop?.setAttribute("aria-hidden", String(!(showCreate || showJoin)));
+    };
+
+    if (carSlideTarget === "onboarding.html") {
+      sessionStorage.removeItem("carSlideTarget");
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => frame.classList.add("page-slide-enter"));
+      });
+    }
+
+    const storedProfileName = localStorage.getItem(PROFILE_NAME_KEY);
+    if (storedProfileName && profileNameInput) {
+      profileNameInput.value = storedProfileName;
+    }
+
+    profileNameInput?.addEventListener("input", () => {
+      saveProfileName(profileNameInput.value);
+    });
+
+    profileNameInput?.addEventListener("blur", () => {
+      saveProfileName(profileNameInput.value);
+    });
+
+    leftBtn.addEventListener("click", () => {
+      split.dataset.active = "left";
+      const newLink = buildGroupLink();
+      groupLinkOutput.value = newLink;
+      if (groupNameInput) groupNameInput.value = "";
+      if (joinGroupStatus) joinGroupStatus.textContent = "";
+      scheduleModalOpen("create");
+    });
+
+    rightBtn.addEventListener("click", () => {
+      split.dataset.active = "right";
+      if (joinGroupLinkInput) joinGroupLinkInput.value = "";
+      if (joinGroupStatus) joinGroupStatus.textContent = "";
+      scheduleModalOpen("join");
+    });
+
+    createGroupCardBtn?.addEventListener("click", () => {
+      const enteredGroupName = groupNameInput?.value?.trim() || "";
+      if (!enteredGroupName) return;
+      const newLink = buildGroupLink();
+      groupLinkOutput.value = newLink;
+      saveProfileName(getCurrentProfileName());
+      persistCreatedGroup(enteredGroupName, newLink);
+      sessionStorage.setItem("carSlideTarget", "request.html");
+      window.location.href = "request.html";
+    });
+
+    joinGroupCardBtn?.addEventListener("click", () => {
+      const enteredLink = joinGroupLinkInput?.value?.trim() || "";
+      if (!enteredLink) {
+        if (joinGroupStatus) joinGroupStatus.textContent = "Enter a group link to join.";
+        return;
+      }
+
+      const matchedGroup = findGroupByLink(enteredLink);
+      if (!matchedGroup) {
+        if (joinGroupStatus) joinGroupStatus.textContent = "Link not found. Try a valid group link.";
+        return;
+      }
+
+      saveProfileName(getCurrentProfileName());
+      addGroupToCurrentProfile(matchedGroup);
+      sessionStorage.setItem("carSlideTarget", "request.html");
+      window.location.href = "request.html";
+    });
+
+    modalBackdrop?.addEventListener("click", () => {
+      setModalOpen(null);
+    });
+
+    if (carLink) {
+      carLink.addEventListener("click", (event) => {
+        event.preventDefault();
+        sessionStorage.setItem("carSlideTarget", "request.html");
+        window.location.href = carLink.getAttribute("href") || "request.html";
+      });
+    }
+  </script>
+</body>
 </html>

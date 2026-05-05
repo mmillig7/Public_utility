@@ -1,0 +1,3165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Offer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <style>
+    :root {
+      --light-bg: #eceef3;
+      --dark-bg: #1a1f29;
+      --light-body-text: var(--dark-bg);
+      --dark-surface: #262e3d;
+      --dark-line: #4f5e79;
+      --dark-text-primary: #ebf2fc;
+      --dark-text-secondary: #bccce6;
+      --font-chakra: "Chakra Petch", Inter, Arial, sans-serif;
+      --ease-smooth: cubic-bezier(0.22, 0.65, 0.18, 1);
+      --ease-panel: cubic-bezier(0.19, 0.9, 0.2, 1);
+      --dur-fast: 220ms;
+      --shadow-group-join-popup: 8px 8px 16px rgba(10, 13, 20, 0.72), -8px -8px 16px rgba(59, 71, 97, 0.34), inset 1px 1px 0 rgba(66, 82, 107, 0.3);
+      --light-surface-elevated: #e3e6ee;
+      --shadow-group-join-popup-light: 8px 8px 16px rgba(120, 132, 158, 0.2), -6px -6px 14px rgba(248, 249, 252, 0.55), inset 1px 1px 0 rgba(255, 255, 255, 0.36);
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: var(--dark-bg);
+      font-family: Inter, Arial, sans-serif;
+      transition: background-color 220ms var(--ease-smooth);
+    }
+
+    .frame {
+      position: relative;
+      width: 402px;
+      height: 874px;
+      border-radius: 40px;
+      background: var(--dark-bg);
+      box-shadow: 14px 14px 28px rgba(10, 13, 20, 0.72), -14px -14px 28px rgba(59, 71, 97, 0.34);
+      overflow: hidden;
+      isolation: isolate;
+      transition: background-color 220ms var(--ease-smooth), box-shadow 220ms var(--ease-smooth);
+    }
+
+    body.transition-to-request {
+      background: var(--light-bg);
+    }
+
+    .frame.transition-to-request {
+      background: var(--light-bg);
+      box-shadow: 14px 14px 28px rgba(209, 214, 224, 0.7), -14px -14px 28px rgba(255, 255, 255, 0.95);
+    }
+
+    .box {
+      position: absolute;
+      border: 0;
+      border-radius: 18px;
+      background: var(--dark-surface);
+      box-shadow: 8px 8px 16px rgba(10, 13, 20, 0.72), -8px -8px 16px rgba(59, 71, 97, 0.34), inset 1px 1px 0 rgba(66, 82, 107, 0.3);
+    }
+
+    #offer1-1 {
+      left: 116px;
+      top: 94px;
+      width: 171px;
+      height: 38px;
+      box-shadow: 8px 10px 22px rgba(8, 11, 18, 0.62), -11px -11px 22px rgba(83, 104, 139, 0.32), inset 1px 1px 0 rgba(121, 145, 186, 0.2);
+    }
+
+    #offer1-2 {
+      left: 48px;
+      top: 92px;
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      color: var(--dark-text-secondary);
+      font-size: 24px;
+      line-height: 1;
+      font-weight: 500;
+    }
+
+    #offer1-2::before {
+      content: "+";
+    }
+
+    #offer1-3 {
+      left: 316px;
+      top: 85px;
+      width: 56px;
+      height: 56px;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .icon-circle-button {
+      position: absolute;
+      inset: 0;
+      border: 0;
+      border-radius: inherit;
+      background: transparent;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .profile-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      border-radius: inherit;
+      pointer-events: none;
+    }
+
+    .groups-button {
+      position: absolute;
+      inset: 0;
+      border: 0;
+      background: transparent;
+      border-radius: inherit;
+      color: var(--dark-text-secondary);
+      font-size: 15px;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      cursor: pointer;
+      padding: 0;
+      letter-spacing: 0.2px;
+    }
+
+    .groups-chevron {
+      width: 12px;
+      height: 7px;
+      position: relative;
+      transition: transform var(--dur-fast) var(--ease-smooth);
+    }
+
+    .groups-chevron::before,
+    .groups-chevron::after {
+      content: "";
+      position: absolute;
+      top: 2px;
+      width: 7px;
+      height: 2px;
+      border-radius: 2px;
+      background: var(--dark-text-secondary);
+    }
+
+    .groups-chevron::before {
+      left: 0;
+      transform: rotate(42deg);
+    }
+
+    .groups-chevron::after {
+      right: 0;
+      transform: rotate(-42deg);
+    }
+
+    .groups-menu {
+      position: absolute;
+      left: 92px;
+      top: 149px;
+      width: 220px;
+      max-height: 320px;
+      border-radius: 20px;
+      background: var(--dark-surface);
+      box-shadow: 8px 10px 22px rgba(8, 11, 18, 0.62), -11px -11px 22px rgba(83, 104, 139, 0.32), inset 1px 1px 0 rgba(121, 145, 186, 0.2);
+      padding: 20px 24px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      overflow-y: auto;
+      opacity: 0;
+      transform: translateY(-8px);
+      pointer-events: none;
+      transition: opacity var(--dur-fast) var(--ease-smooth), transform var(--dur-fast) var(--ease-smooth);
+      z-index: 12;
+    }
+
+    .groups-menu-item {
+      color: var(--dark-text-secondary);
+      font-size: 14px;
+      line-height: 1.2;
+      font-family: inherit;
+      border: 0;
+      background: transparent;
+      text-align: center;
+      padding: 0;
+      min-height: 18px;
+      cursor: pointer;
+      transition: color var(--dur-fast) var(--ease-smooth);
+    }
+
+    .groups-menu-item:hover {
+      color: var(--dark-text-primary);
+    }
+
+    .groups-menu-divider {
+      height: 1px;
+      background: var(--dark-line);
+      opacity: 0.72;
+    }
+
+    .frame.groups-open .groups-menu {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .frame.groups-open .groups-chevron {
+      transform: rotate(180deg);
+    }
+
+    .panel-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(14, 18, 26, 0.22);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 280ms var(--ease-smooth);
+      z-index: 24;
+    }
+
+    .group-modal-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(8, 11, 18, 0.55);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--dur-fast) var(--ease-smooth);
+      z-index: 34;
+    }
+
+    .group-modal {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 230px;
+      height: 95px;
+      border-radius: 18px;
+      background: var(--dark-surface);
+      box-shadow: var(--shadow-group-join-popup);
+      transform: translate(-50%, calc(-50% + 10px));
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--dur-fast) var(--ease-smooth), transform var(--dur-fast) var(--ease-smooth);
+      z-index: 35;
+      overflow: hidden;
+    }
+
+    .group-modal-slider {
+      position: absolute;
+      top: 0;
+      left: 110px;
+      width: 120px;
+      height: 95px;
+      border-radius: 18px;
+      background: var(--dark-surface);
+      box-shadow: -2px 0 0 rgba(74, 91, 118, 0.2), 6px 8px 14px rgba(8, 11, 18, 0.42), inset 1px 1px 0 rgba(85, 104, 134, 0.22), inset -1px -1px 0 rgba(15, 19, 28, 0.35);
+      transition: left var(--dur-fast) var(--ease-smooth), width var(--dur-fast) var(--ease-smooth);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .group-modal[data-active="left"] .group-modal-slider {
+      left: 0;
+      width: 110px;
+    }
+
+    .group-modal[data-active="right"] .group-modal-slider {
+      left: 110px;
+      width: 120px;
+    }
+
+    .group-modal-hit {
+      position: absolute;
+      top: 0;
+      height: 100%;
+      border: 0;
+      background: transparent;
+      padding: 0;
+      z-index: 2;
+      color: var(--dark-text-secondary);
+      font-family: inherit;
+      font-size: 12pt;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .group-modal-hit.left {
+      left: 0;
+      width: 110px;
+    }
+
+    .group-modal-hit.right {
+      right: 0;
+      width: 120px;
+    }
+
+    .frame.group-modal-open .group-modal-backdrop {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .frame.group-modal-open .group-modal {
+      opacity: 1;
+      transform: translate(-50%, -50%);
+      pointer-events: auto;
+    }
+
+    .create-group-card,
+    .join-group-card {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 297px;
+      height: 258px;
+      border-radius: 30px;
+      background: var(--dark-surface);
+      box-shadow: var(--shadow-group-join-popup);
+      transform: translate(-50%, calc(-50% + 10px));
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--dur-fast) var(--ease-smooth), transform var(--dur-fast) var(--ease-smooth);
+      z-index: 36;
+      overflow: hidden;
+    }
+
+    .frame.group-card-open .group-modal-backdrop {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .create-group-card.visible,
+    .join-group-card.visible {
+      opacity: 1;
+      transform: translate(-50%, -50%);
+      pointer-events: auto;
+    }
+
+    .card-label {
+      position: absolute;
+      margin: 0;
+      left: 95px;
+      width: 119px;
+      height: 39px;
+      font-size: 16px;
+      line-height: 39px;
+      color: var(--dark-text-secondary);
+    }
+
+    .card-label.link {
+      top: 21px;
+      width: 106px;
+    }
+
+    .card-label.name {
+      top: 107px;
+    }
+
+    .card-label.join-link {
+      top: 68px;
+      width: 103px;
+    }
+
+    .card-field {
+      position: absolute;
+      left: 42px;
+      width: 212px;
+      height: 39px;
+      border: 0;
+      border-radius: 12px;
+      background: #1c2433;
+      box-sizing: border-box;
+      padding: 0 12px;
+      outline: none;
+      font-family: inherit;
+      font-size: 14px;
+      color: var(--dark-text-primary);
+      box-shadow: 6px 6px 12px rgba(5, 8, 14, 0.62), -4px -4px 10px rgba(59, 71, 97, 0.28), inset 1px 1px 0 rgba(80, 98, 126, 0.28);
+    }
+
+    .card-field.link {
+      top: 60px;
+    }
+
+    .card-field.name {
+      top: 139px;
+    }
+
+    .card-field.join {
+      top: 114px;
+    }
+
+    .card-link-output {
+      padding-right: 8px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .card-btn {
+      position: absolute;
+      left: 97px;
+      top: 215px;
+      width: 112px;
+      height: 27px;
+      border: 0;
+      border-radius: 20px;
+      background: #2b3850;
+      color: var(--dark-text-primary);
+      padding: 0;
+      font-size: 14px;
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    .join-card-btn {
+      left: 92px;
+      top: 220px;
+    }
+
+    .join-status {
+      position: absolute;
+      left: 24px;
+      right: 24px;
+      top: 182px;
+      margin: 0;
+      min-height: 16px;
+      font-size: 12px;
+      line-height: 1.25;
+      color: var(--dark-text-secondary);
+      text-align: center;
+    }
+
+    .location-consent-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px 16px;
+      box-sizing: border-box;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 220ms var(--ease-smooth);
+    }
+
+    .frame.location-consent-open .location-consent-layer {
+      pointer-events: auto;
+      opacity: 1;
+    }
+
+    .location-consent-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(10, 20, 40, 0.28);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .location-consent {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 312px;
+      border-radius: 24px;
+      overflow: hidden;
+      background: rgba(220, 228, 242, 0.78);
+      backdrop-filter: blur(28px) saturate(1.35);
+      -webkit-backdrop-filter: blur(28px) saturate(1.35);
+      box-shadow: 0 22px 50px rgba(25, 40, 70, 0.28), inset 0 0 0 1px rgba(255, 255, 255, 0.45);
+      text-align: center;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+      transform: scale(0.96);
+      transition: transform 240ms var(--ease-smooth);
+    }
+
+    .frame.location-consent-open .location-consent {
+      transform: scale(1);
+    }
+
+    .location-consent-header {
+      padding: 18px 16px 8px;
+    }
+
+    .location-consent-title {
+      margin: 0 0 8px;
+      color: #000;
+      font-size: 17px;
+      font-weight: 600;
+      line-height: 1.25;
+      letter-spacing: -0.01em;
+    }
+
+    .location-consent-text {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.35;
+      color: rgba(0, 0, 0, 0.88);
+    }
+
+    .location-consent-map-wrap {
+      margin: 10px 12px 4px;
+      position: relative;
+      border-radius: 14px;
+      overflow: hidden;
+      aspect-ratio: 1.05;
+      background: #c5d4e8;
+    }
+
+    .location-consent-map-img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      vertical-align: middle;
+    }
+
+    .location-consent-actions {
+      display: flex;
+      flex-direction: column;
+      margin-top: 2px;
+      border-top: 1px solid rgba(60, 80, 120, 0.2);
+    }
+
+    .location-consent-btn {
+      width: 100%;
+      border: 0;
+      margin: 0;
+      padding: 13px 12px;
+      background: transparent;
+      font-family: inherit;
+      font-size: 17px;
+      font-weight: 400;
+      color: #007aff;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .location-consent-btn + .location-consent-btn {
+      border-top: 1px solid rgba(60, 80, 120, 0.2);
+    }
+
+    .location-consent-btn:active {
+      background: rgba(0, 0, 0, 0.06);
+    }
+
+    .location-consent-status {
+      margin: 0;
+      padding: 8px 14px 12px;
+      font-size: 12px;
+      line-height: 1.3;
+      color: rgba(0, 0, 0, 0.55);
+      min-height: 0;
+    }
+
+    .side-panel {
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 211px;
+      height: 874px;
+      border-radius: 30px;
+      background: var(--dark-bg);
+      transform: translateX(100%);
+      transition: transform 360ms var(--ease-panel);
+      z-index: 30;
+      pointer-events: none;
+      box-shadow: -10px 0 24px rgba(10, 13, 20, 0.42);
+    }
+
+    .side-panel-item {
+      position: absolute;
+      padding: 10px;
+      font-size: 16px;
+      line-height: 1.2;
+      font-family: Arial, sans-serif;
+      color: var(--dark-text-secondary);
+      white-space: nowrap;
+      letter-spacing: 0.1px;
+    }
+
+    .side-panel-main-stack {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 181px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 28px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .side-panel-main-stack .side-panel-item {
+      position: static;
+    }
+
+    .side-panel-item.name {
+      left: 0;
+      right: 0;
+      width: 100%;
+      box-sizing: border-box;
+      padding: 10px 16px;
+      text-align: center;
+      font-family: ui-rounded, "SF Pro Rounded", -apple-system, BlinkMacSystemFont, "Helvetica Neue", system-ui, sans-serif;
+      font-size: 20pt;
+      line-height: 1.2;
+      letter-spacing: 0;
+      color: var(--dark-text-primary);
+    }
+
+    .side-panel-item.location {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 10px;
+      margin-top: 5px;
+      cursor: pointer;
+    }
+
+    .side-panel-location-icon {
+      display: block;
+      width: 41px;
+      height: 51px;
+      object-fit: contain;
+      object-position: center;
+      filter: invert(1);
+      opacity: 0.92;
+    }
+
+    .side-panel-item.notifications {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .side-panel-notif-icon {
+      display: block;
+      width: 55px;
+      height: 51px;
+      object-fit: contain;
+      object-position: center;
+      flex-shrink: 0;
+      filter: invert(1);
+      opacity: 0.92;
+    }
+
+    .side-panel-close-wrap {
+      position: absolute;
+      left: 138px;
+      top: 85px;
+      width: 56px;
+      height: 56px;
+      border-radius: 999px;
+      background: var(--dark-surface);
+      box-shadow: 8px 8px 16px rgba(10, 13, 20, 0.72), -8px -8px 16px rgba(59, 71, 97, 0.34), inset 1px 1px 0 rgba(66, 82, 107, 0.3);
+      overflow: visible;
+    }
+
+    .side-panel-profile-hit {
+      position: absolute;
+      inset: 0;
+      border: 0;
+      border-radius: inherit;
+      padding: 0;
+      margin: 0;
+      background: transparent;
+      cursor: pointer;
+      display: block;
+      z-index: 1;
+    }
+
+    .side-panel-close-corner {
+      position: absolute;
+      top: 2px;
+      right: 2px;
+      width: 22px;
+      height: 22px;
+      border: 0;
+      border-radius: 999px;
+      padding: 0;
+      cursor: pointer;
+      z-index: 2;
+      background: rgba(38, 46, 61, 0.92);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
+    }
+
+    .side-panel-profile-menu {
+      position: absolute;
+      left: 50%;
+      top: 151px;
+      width: 200px;
+      margin-left: -100px;
+      border-radius: 20px;
+      background: var(--dark-surface);
+      box-shadow: 8px 10px 22px rgba(8, 11, 18, 0.62), -11px -11px 22px rgba(83, 104, 139, 0.32), inset 1px 1px 0 rgba(121, 145, 186, 0.2);
+      padding: 20px 24px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      opacity: 0;
+      transform: translateY(-8px);
+      pointer-events: none;
+      transition: opacity var(--dur-fast) var(--ease-smooth), transform var(--dur-fast) var(--ease-smooth);
+      z-index: 32;
+    }
+
+    .side-panel-profile-menu-item {
+      color: var(--dark-text-secondary);
+      font-size: 14px;
+      line-height: 1.2;
+      font-family: inherit;
+      border: 0;
+      background: transparent;
+      text-align: center;
+      padding: 0;
+      min-height: 18px;
+      cursor: pointer;
+      transition: color var(--dur-fast) var(--ease-smooth);
+    }
+
+    .side-panel-profile-menu-item:hover {
+      color: var(--dark-text-primary);
+    }
+
+    .side-panel-profile-menu-divider {
+      height: 1px;
+      background: var(--dark-line);
+      opacity: 0.72;
+    }
+
+    .frame.panel-open.side-panel-profile-menu-open .side-panel-profile-menu {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .frame.panel-open .side-panel {
+      transform: translateX(0);
+      pointer-events: auto;
+    }
+
+    .frame.panel-open .panel-backdrop {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    #offer1-4 {
+      left: 16px;
+      top: 206px;
+      width: 366px;
+      height: 125px;
+      border-radius: 18px;
+      overflow: hidden;
+    }
+
+    #offer1-4 .slider-thumb {
+      position: absolute;
+      top: 0;
+      left: 183px;
+      width: 183px;
+      height: 125px;
+      border-radius: 18px;
+      background: var(--dark-surface);
+      box-shadow: 8px 10px 22px rgba(8, 11, 18, 0.62), -11px -11px 22px rgba(83, 104, 139, 0.32), inset 1px 1px 0 rgba(121, 145, 186, 0.2);
+      will-change: left, background-color, box-shadow, transform;
+      transform: translateZ(0);
+      transition: left 280ms var(--ease-smooth);
+      pointer-events: none;
+    }
+
+    #offer1-4[data-active="left"] .slider-thumb {
+      left: 0;
+    }
+
+    .split-hit {
+      position: absolute;
+      top: 0;
+      width: 183px;
+      height: 125px;
+      border: 0;
+      background: transparent;
+      padding: 0;
+      cursor: pointer;
+      font-size: 14px;
+      font-family: var(--font-chakra);
+      z-index: 2;
+      transition: color var(--dur-fast) var(--ease-smooth);
+    }
+
+    .split-hit.left {
+      left: 0;
+      color: var(--dark-text-secondary);
+    }
+
+    .split-hit.right {
+      right: 0;
+      color: var(--dark-text-primary);
+    }
+
+    #offer1-5,
+    #offer1-6,
+    #offer1-7 {
+      left: 43px;
+      width: 318px;
+      height: 144px;
+      padding: 8px 10px;
+      box-sizing: border-box;
+    }
+
+    #offer1-5 {
+      top: 417px;
+    }
+
+    #offer1-6 {
+      top: 591px;
+    }
+
+    #offer1-7 {
+      top: 765px;
+    }
+
+    .ride-summary-card {
+      display: flex;
+      flex-direction: row;
+      align-items: stretch;
+      gap: 8px;
+      height: 100%;
+      box-sizing: border-box;
+    }
+
+    .ride-summary-text {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 3px;
+      font-size: 11px;
+      line-height: 1.3;
+      color: var(--dark-text-secondary);
+    }
+
+    .ride-summary-text .ride-heading {
+      font-weight: 600;
+      font-size: 12px;
+      margin: 0;
+      color: var(--dark-text-primary);
+    }
+
+    .ride-summary-text .ride-line {
+      margin: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .ride-summary-map {
+      width: 112px;
+      flex-shrink: 0;
+      border-radius: 14px;
+      overflow: hidden;
+      background: #1a2230;
+      box-shadow: inset 0 0 0 1px rgba(80, 98, 126, 0.35);
+    }
+
+    .ride-summary-map .leaflet-container {
+      font-family: inherit;
+      background: #151b26;
+    }
+
+    .ride-summary-map.ride-summary-map--leaflet-dark .leaflet-container {
+      background: #2c2c2e;
+    }
+
+    .ride-summary-map.ride-summary-map--apple {
+      cursor: pointer;
+    }
+
+    #offer1-8 {
+      left: 265px;
+      top: 736px;
+      width: 120px;
+      height: 120px;
+      border-radius: 100px;
+      overflow: hidden;
+      display: block;
+    }
+
+    .circle-car {
+      position: absolute;
+      left: 14px;
+      top: 41px;
+      width: 97px;
+      height: 43px;
+      object-fit: contain;
+      filter: brightness(2.15) saturate(0.2) contrast(0.78);
+      display: block;
+      pointer-events: none;
+    }
+
+    .frame19-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(8, 11, 18, 0.55);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--dur-fast) var(--ease-smooth);
+      z-index: 1000;
+    }
+
+    .frame19-modal {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 297px;
+      height: 640px;
+      border-radius: 30px;
+      background: #1a1f29;
+      box-shadow: var(--shadow-group-join-popup);
+      transform: translate(-50%, calc(-50% + 10px));
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--dur-fast) var(--ease-smooth), transform var(--dur-fast) var(--ease-smooth);
+      z-index: 1001;
+      overflow: hidden;
+      font-family: ui-rounded, "SF Pro Rounded", -apple-system, BlinkMacSystemFont, "Helvetica Neue", system-ui, sans-serif;
+    }
+
+    .frame19-modal :is(
+      p,
+      input,
+      button,
+      span,
+      label,
+      li
+    ) {
+      font-family: ui-rounded, "SF Pro Rounded", -apple-system, BlinkMacSystemFont, "Helvetica Neue", system-ui, sans-serif;
+    }
+
+    .frame19-modal[data-mode="request"] {
+      background: var(--light-surface-elevated);
+      box-shadow: var(--shadow-group-join-popup-light);
+    }
+
+    .frame19-slider {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 297px;
+      height: 90px;
+      border-radius: 18px;
+      background: #262e3d;
+      box-shadow: 8px 10px 22px rgba(8, 11, 18, 0.62), -11px -11px 22px rgba(83, 104, 139, 0.32), inset 1px 1px 0 rgba(121, 145, 186, 0.2);
+    }
+
+    .frame19-modal[data-mode="request"] .frame19-slider {
+      background: var(--light-surface-elevated);
+      box-shadow: 8px 10px 22px rgba(199, 207, 220, 0.52), -11px -11px 22px rgba(255, 255, 255, 0.98), inset 1px 1px 0 rgba(255, 255, 255, 0.62);
+    }
+
+    .frame19-slider-pill {
+      position: absolute;
+      left: 148px;
+      top: 0;
+      width: 149px;
+      height: 90px;
+      border-radius: 18px;
+      background: #262e3d;
+      box-shadow: 8px 10px 22px rgba(8, 11, 18, 0.62), -11px -11px 22px rgba(83, 104, 139, 0.32), inset 1px 1px 0 rgba(121, 145, 186, 0.2);
+      transition: left var(--dur-fast) var(--ease-smooth);
+    }
+
+    .frame19-modal[data-mode="request"] .frame19-slider-pill {
+      background: var(--light-surface-elevated);
+      box-shadow: 8px 10px 22px rgba(199, 207, 220, 0.52), -11px -11px 22px rgba(255, 255, 255, 0.98), inset 1px 1px 0 rgba(255, 255, 255, 0.62);
+    }
+
+    .frame19-slider-label {
+      position: absolute;
+      top: 30px;
+      margin: 0;
+      font-size: 24px;
+      font-family: var(--font-chakra);
+      line-height: 1;
+      color: var(--dark-text-secondary);
+      transition: color var(--dur-fast) var(--ease-smooth);
+    }
+
+    .frame19-modal .frame19-slider-label {
+      font-family: var(--font-chakra);
+    }
+
+    .frame19-slider-label.request {
+      left: 31px;
+    }
+
+    .frame19-slider-label.offer {
+      left: 192px;
+      color: var(--dark-text-primary);
+    }
+
+    .frame19-slider-hit {
+      position: absolute;
+      top: 0;
+      width: 148px;
+      height: 90px;
+      border: 0;
+      background: transparent;
+      padding: 0;
+      cursor: pointer;
+      z-index: 4;
+    }
+
+    .frame19-slider-hit.left {
+      left: 0;
+    }
+
+    .frame19-slider-hit.right {
+      right: 0;
+    }
+
+    .frame19-modal[data-mode="request"] .frame19-slider-pill {
+      left: 0;
+    }
+
+    .frame19-modal[data-mode="request"] .frame19-slider-label.request {
+      color: var(--light-body-text);
+    }
+
+    .frame19-modal[data-mode="request"] .frame19-slider-label.offer {
+      color: var(--light-body-text);
+    }
+
+    .frame19-label {
+      position: absolute;
+      margin: 0;
+      color: var(--dark-text-secondary);
+      font-size: 16px;
+      line-height: 39px;
+      height: 39px;
+    }
+
+    .frame19-label.time { left: 106px; top: 95px; width: 85px; }
+    .frame19-label.point-a { left: 118px; top: 229px; width: 64px; }
+    .frame19-label.point-b { left: 115px; top: 317px; width: 64px; }
+    .frame19-label.group { left: 101px; top: 405px; width: 94px; }
+    .frame19-label.comments { left: 95px; top: 493px; width: 106px; }
+
+    .frame19-modal[data-mode="request"] .frame19-label {
+      color: var(--light-body-text);
+    }
+
+    .frame19-input {
+      position: absolute;
+      left: 42px;
+      width: 212px;
+      height: 39px;
+      border: 0;
+      border-radius: 12px;
+      background: #1c2433;
+      box-sizing: border-box;
+      padding: 0 12px;
+      outline: none;
+      color: var(--dark-text-primary);
+      font-family: inherit;
+      font-size: 14px;
+      box-shadow: 6px 6px 12px rgba(5, 8, 14, 0.62), -4px -4px 10px rgba(59, 71, 97, 0.28), inset 1px 1px 0 rgba(80, 98, 126, 0.28);
+    }
+
+    .frame19-modal[data-mode="request"] .frame19-input {
+      background: #cfd6e6;
+      color: var(--light-body-text);
+      box-shadow: 6px 6px 12px rgba(185, 192, 206, 0.48), -5px -5px 12px rgba(255, 255, 255, 0.78), inset 1px 1px 0 rgba(255, 255, 255, 0.55);
+    }
+
+    .frame19-date-wheel {
+      position: absolute;
+      left: 42px;
+      top: 134px;
+      width: 212px;
+      height: 96px;
+      border-radius: 12px;
+      background: #1c2433;
+      box-shadow:
+        6px 6px 12px rgba(5, 8, 14, 0.62),
+        -4px -4px 10px rgba(59, 71, 97, 0.28),
+        inset 1px 1px 0 rgba(80, 98, 126, 0.28);
+      overflow: hidden;
+      z-index: 9;
+    }
+
+    .frame19-modal[data-mode="request"] .frame19-date-wheel {
+      background: #cfd6e6;
+      box-shadow:
+        6px 6px 12px rgba(185, 192, 206, 0.48),
+        -5px -5px 12px rgba(255, 255, 255, 0.78),
+        inset 1px 1px 0 rgba(255, 255, 255, 0.55);
+    }
+
+    .frame19-date-wheel-highlight {
+      position: absolute;
+      left: 8px;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      height: 32px;
+      border-radius: 8px;
+      background: rgba(235, 242, 252, 0.06);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .frame19-modal[data-mode="request"] .frame19-date-wheel-highlight {
+      background: rgba(120, 132, 158, 0.14);
+    }
+
+    .frame19-date-wheel-cols {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      height: 100%;
+    }
+
+    .frame19-date-wheel-col {
+      flex: 1;
+      min-width: 0;
+      height: 96px;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      scroll-snap-type: y mandatory;
+      padding-top: 32px;
+      padding-bottom: 32px;
+      box-sizing: border-box;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .frame19-date-wheel-col::-webkit-scrollbar {
+      display: none;
+    }
+
+    .frame19-date-wheel-item {
+      height: 32px;
+      line-height: 32px;
+      text-align: center;
+      font-size: 13px;
+      letter-spacing: 0.01em;
+      color: var(--dark-text-primary);
+      scroll-snap-align: center;
+      flex-shrink: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      padding: 0 2px;
+      box-sizing: border-box;
+    }
+
+    .frame19-modal[data-mode="request"] .frame19-date-wheel-item {
+      color: var(--light-body-text);
+    }
+
+    .frame19-date-wheel-fade {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 26px;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .frame19-date-wheel-fade--top {
+      top: 0;
+      background: linear-gradient(to bottom, #1c2433, rgba(28, 36, 51, 0));
+    }
+
+    .frame19-date-wheel-fade--bottom {
+      bottom: 0;
+      background: linear-gradient(to top, #1c2433, rgba(28, 36, 51, 0));
+    }
+
+    .frame19-modal[data-mode="request"] .frame19-date-wheel-fade--top {
+      background: linear-gradient(to bottom, #cfd6e6, rgba(207, 214, 230, 0));
+    }
+
+    .frame19-modal[data-mode="request"] .frame19-date-wheel-fade--bottom {
+      background: linear-gradient(to top, #cfd6e6, rgba(207, 214, 230, 0));
+    }
+
+    .ride-input-wrap {
+      position: absolute;
+      left: 42px;
+      width: 212px;
+      z-index: 8;
+    }
+
+    .ride-input-wrap.point-a-wrap {
+      top: 273px;
+    }
+
+    .ride-input-wrap.point-b-wrap {
+      top: 361px;
+    }
+
+    .ride-input-wrap .frame19-input {
+      position: relative;
+      left: 0;
+      top: 0;
+      width: 100%;
+      display: block;
+    }
+
+    .ride-suggest {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: calc(100% + 4px);
+      margin: 0;
+      padding: 4px 0;
+      list-style: none;
+      max-height: 132px;
+      overflow-y: auto;
+      border-radius: 12px;
+      background: #262e3d;
+      box-shadow: var(--shadow-group-join-popup);
+      z-index: 60;
+      font-size: 12px;
+      color: var(--dark-text-primary);
+    }
+
+    .frame19-modal[data-mode="request"] .ride-suggest {
+      background: var(--light-surface-elevated);
+      color: var(--light-body-text);
+      box-shadow: 8px 8px 16px rgba(120, 132, 158, 0.2), -6px -6px 14px rgba(248, 249, 252, 0.55), inset 1px 1px 0 rgba(255, 255, 255, 0.36);
+    }
+
+    .ride-suggest li {
+      margin: 0;
+      padding: 0;
+    }
+
+    .ride-suggest button {
+      width: 100%;
+      border: 0;
+      background: transparent;
+      padding: 7px 10px;
+      text-align: left;
+      cursor: pointer;
+      font: inherit;
+      color: inherit;
+      display: block;
+    }
+
+    .ride-suggest button:hover,
+    .ride-suggest button:focus-visible {
+      background: rgba(235, 242, 252, 0.08);
+    }
+
+    .frame19-modal[data-mode="request"] .ride-suggest button:hover,
+    .frame19-modal[data-mode="request"] .ride-suggest button:focus-visible {
+      background: rgba(120, 132, 158, 0.12);
+    }
+
+    .frame19-group-wheel {
+      position: absolute;
+      left: 42px;
+      top: 443px;
+      width: 212px;
+      height: 84px;
+      border-radius: 12px;
+      background: #1c2433;
+      box-shadow:
+        6px 6px 12px rgba(5, 8, 14, 0.62),
+        -4px -4px 10px rgba(59, 71, 97, 0.28),
+        inset 1px 1px 0 rgba(80, 98, 126, 0.28);
+      overflow: hidden;
+      z-index: 9;
+    }
+
+    .frame19-modal[data-mode="request"] .frame19-group-wheel {
+      background: #cfd6e6;
+      box-shadow:
+        6px 6px 12px rgba(185, 192, 206, 0.48),
+        -5px -5px 12px rgba(255, 255, 255, 0.78),
+        inset 1px 1px 0 rgba(255, 255, 255, 0.55);
+    }
+
+    .frame19-group-wheel-highlight {
+      position: absolute;
+      left: 8px;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      height: 32px;
+      border-radius: 8px;
+      background: rgba(235, 242, 252, 0.06);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .frame19-modal[data-mode="request"] .frame19-group-wheel-highlight {
+      background: rgba(120, 132, 158, 0.14);
+    }
+
+    .frame19-group-wheel-col {
+      position: relative;
+      z-index: 1;
+      height: 84px;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      scroll-snap-type: y mandatory;
+      padding-top: 26px;
+      padding-bottom: 26px;
+      box-sizing: border-box;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .frame19-group-wheel-col::-webkit-scrollbar {
+      display: none;
+    }
+
+    .frame19-group-wheel-item {
+      height: 32px;
+      line-height: 32px;
+      text-align: center;
+      font-size: 13px;
+      letter-spacing: 0.01em;
+      color: var(--dark-text-primary);
+      scroll-snap-align: center;
+      white-space: nowrap;
+    }
+
+    .frame19-modal[data-mode="request"] .frame19-group-wheel-item {
+      color: var(--light-body-text);
+    }
+
+    .frame19-group-wheel-fade {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 22px;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .frame19-group-wheel-fade--top {
+      top: 0;
+      background: linear-gradient(to bottom, #1c2433, rgba(28, 36, 51, 0));
+    }
+
+    .frame19-group-wheel-fade--bottom {
+      bottom: 0;
+      background: linear-gradient(to top, #1c2433, rgba(28, 36, 51, 0));
+    }
+
+    .frame19-modal[data-mode="request"] .frame19-group-wheel-fade--top {
+      background: linear-gradient(to bottom, #cfd6e6, rgba(207, 214, 230, 0));
+    }
+
+    .frame19-modal[data-mode="request"] .frame19-group-wheel-fade--bottom {
+      background: linear-gradient(to top, #cfd6e6, rgba(207, 214, 230, 0));
+    }
+
+    .frame19-input.comments {
+      top: 537px;
+    }
+
+    .frame19-modal .frame19-label,
+    .frame19-modal .frame19-input,
+    .frame19-modal .frame19-submit,
+    .frame19-modal .ride-suggest button {
+      text-align: center;
+    }
+
+    .frame19-submit {
+      position: absolute;
+      left: 89px;
+      top: 588px;
+      width: 116px;
+      height: 27px;
+      border: 0;
+      border-radius: 20px;
+      background: #262e3d;
+      color: var(--dark-text-secondary);
+      font-size: 14px;
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    .frame19-modal[data-mode="request"] .frame19-submit {
+      background: #cfd8e7;
+      color: var(--light-body-text);
+    }
+
+    .frame.frame19-open .frame19-backdrop {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .frame.frame19-open .frame19-modal {
+      opacity: 1;
+      transform: translate(-50%, -50%);
+      pointer-events: auto;
+    }
+
+    .profile-photo-file-input {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .profile-photo-edit-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(6, 10, 18, 0.55);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--dur-fast) var(--ease-smooth);
+      z-index: 36;
+    }
+
+    .profile-photo-edit-modal {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 297px;
+      padding: 22px 18px 20px;
+      box-sizing: border-box;
+      border-radius: 30px;
+      background: #1a1f29;
+      box-shadow: 14px 14px 28px rgba(10, 13, 20, 0.72), -14px -14px 28px rgba(59, 71, 97, 0.34);
+      transform: translate(-50%, calc(-50% + 10px));
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--dur-fast) var(--ease-smooth), transform var(--dur-fast) var(--ease-smooth);
+      z-index: 37;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .profile-photo-edit-title {
+      margin: 0 0 14px;
+      font-size: 18px;
+      font-weight: 400;
+      font-family: var(--font-chakra);
+      line-height: 1.2;
+      letter-spacing: 0.02em;
+      color: var(--dark-text-primary);
+    }
+
+    .profile-photo-edit-preview-wrap {
+      margin-bottom: 12px;
+    }
+
+    .profile-photo-crop-viewport {
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      overflow: hidden;
+      position: relative;
+      margin: 0 auto;
+      background: var(--dark-bg);
+      box-shadow: 8px 10px 22px rgba(8, 11, 18, 0.62), -11px -11px 22px rgba(83, 104, 139, 0.32), inset 1px 1px 0 rgba(121, 145, 186, 0.2);
+      touch-action: none;
+      cursor: grab;
+    }
+
+    .profile-photo-crop-viewport:active {
+      cursor: grabbing;
+    }
+
+    .profile-photo-crop-viewport img {
+      position: absolute;
+      display: block;
+      max-width: none;
+      height: auto;
+      user-select: none;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+    }
+
+    .profile-photo-crop-hint {
+      margin: 12px 0 8px;
+      font-size: 13px;
+      line-height: 1.35;
+      color: var(--dark-text-secondary);
+    }
+
+    .profile-photo-crop-zoom-label {
+      display: block;
+      font-size: 14px;
+      color: var(--dark-text-secondary);
+      margin-bottom: 6px;
+      text-align: left;
+    }
+
+    .profile-photo-crop-zoom {
+      width: 100%;
+      height: 8px;
+      margin-bottom: 6px;
+      accent-color: var(--dark-text-secondary);
+    }
+
+    .profile-photo-edit-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: center;
+      margin-top: 4px;
+    }
+
+    .profile-photo-edit-actions button {
+      border: 0;
+      font-family: inherit;
+      cursor: pointer;
+      transition: opacity var(--dur-fast) var(--ease-smooth);
+    }
+
+    .profile-photo-edit-actions button:active {
+      opacity: 0.88;
+    }
+
+    #profilePhotoEditSave {
+      width: 116px;
+      height: 27px;
+      border-radius: 20px;
+      padding: 0 12px;
+      font-size: 14px;
+      background: #262e3d;
+      color: var(--dark-text-secondary);
+      font-weight: 500;
+    }
+
+    #profilePhotoEditReset {
+      width: 100%;
+      max-width: 212px;
+      border-radius: 12px;
+      padding: 8px 12px;
+      font-size: 14px;
+      background: var(--dark-bg);
+      color: var(--dark-text-secondary);
+      box-shadow: inset 0 0 0 1px rgba(121, 145, 186, 0.35);
+    }
+
+    #profilePhotoEditCancel {
+      background: transparent;
+      color: var(--dark-text-secondary);
+      font-size: 13px;
+      padding: 6px 8px;
+      border-radius: 12px;
+    }
+
+    .frame.profile-photo-edit-open .profile-photo-edit-backdrop {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .frame.profile-photo-edit-open .profile-photo-edit-modal {
+      opacity: 1;
+      transform: translate(-50%, -50%);
+      pointer-events: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <div id="offer1-1" class="box">
+      <button id="groupsToggle" class="groups-button" type="button" aria-expanded="false" aria-controls="groupsMenu">
+        <span>Groups</span>
+        <span class="groups-chevron" aria-hidden="true"></span>
+      </button>
+    </div>
+    <div id="offer1-2" class="box">
+      <button id="openGroupModal" class="icon-circle-button" type="button" aria-label="Open create or join group"></button>
+    </div>
+    <div id="offer1-3" class="box">
+      <img src="Assets/profile-dark.png" alt="Profile" class="profile-image" />
+      <button id="openSidePanel" class="icon-circle-button" type="button" aria-label="Open side panel"></button>
+    </div>
+    <div id="groupsMenu" class="groups-menu" aria-hidden="true"></div>
+    <div id="offer1-4" class="box" data-active="right">
+      <div class="slider-thumb" aria-hidden="true"></div>
+      <button class="split-hit left" type="button">Request</button>
+      <button class="split-hit right" type="button">Offer</button>
+    </div>
+    <div id="offer1-5" class="box ride-slot"></div>
+    <div id="offer1-6" class="box ride-slot"></div>
+    <div id="offer1-7" class="box ride-slot"></div>
+    <div id="offer1-8" class="box">
+      <img src="Assets/Car.png" alt="Car" class="circle-car" />
+      <button id="openFrame19Modal" class="icon-circle-button" type="button" aria-label="Open request details"></button>
+    </div>
+    <div id="frame19Backdrop" class="frame19-backdrop" aria-hidden="true"></div>
+    <section id="frame19Modal" class="frame19-modal" aria-hidden="true" data-mode="offer">
+      <div class="frame19-slider">
+        <div class="frame19-slider-pill" aria-hidden="true"></div>
+        <p class="frame19-slider-label request">Request</p>
+        <p class="frame19-slider-label offer">Offer</p>
+        <button id="frame19ModeRequest" class="frame19-slider-hit left" type="button" aria-label="Show request style"></button>
+        <button id="frame19ModeOffer" class="frame19-slider-hit right" type="button" aria-label="Show offer style"></button>
+      </div>
+      <p id="frame19LabelTime" class="frame19-label time">Date</p>
+      <div id="frame19DateWheel" class="frame19-date-wheel" role="group" aria-label="Ride date">
+        <div class="frame19-date-wheel-highlight" aria-hidden="true"></div>
+        <div class="frame19-date-wheel-fade frame19-date-wheel-fade--top" aria-hidden="true"></div>
+        <div class="frame19-date-wheel-fade frame19-date-wheel-fade--bottom" aria-hidden="true"></div>
+        <div class="frame19-date-wheel-cols">
+          <div class="frame19-date-wheel-col" data-date-wheel="month" tabindex="0"></div>
+          <div class="frame19-date-wheel-col" data-date-wheel="day" tabindex="0"></div>
+          <div class="frame19-date-wheel-col" data-date-wheel="year" tabindex="0"></div>
+        </div>
+      </div>
+      <p class="frame19-label point-a">Point A</p>
+      <div class="ride-input-wrap point-a-wrap">
+        <input class="frame19-input point-a" type="text" autocomplete="off" placeholder="Start address" />
+        <ul class="ride-suggest" id="frame19SuggestA" hidden></ul>
+      </div>
+      <p class="frame19-label point-b">Point B</p>
+      <div class="ride-input-wrap point-b-wrap">
+        <input class="frame19-input point-b" type="text" autocomplete="off" placeholder="End address" />
+        <ul class="ride-suggest" id="frame19SuggestB" hidden></ul>
+      </div>
+      <p id="frame19LabelGroup" class="frame19-label group"># of seats in car</p>
+      <div id="frame19GroupWheel" class="frame19-group-wheel" role="group" aria-label="Number of people">
+        <div class="frame19-group-wheel-highlight" aria-hidden="true"></div>
+        <div class="frame19-group-wheel-fade frame19-group-wheel-fade--top" aria-hidden="true"></div>
+        <div class="frame19-group-wheel-fade frame19-group-wheel-fade--bottom" aria-hidden="true"></div>
+        <div class="frame19-group-wheel-col" data-group-wheel="count" tabindex="0"></div>
+      </div>
+      <p id="frame19LabelComments" class="frame19-label comments">Comments:</p>
+      <input class="frame19-input comments" type="text" autocomplete="off" />
+      <button id="frame19Submit" class="frame19-submit" type="button">Offer Ride</button>
+    </section>
+    <div id="groupModalBackdrop" class="group-modal-backdrop" aria-hidden="true"></div>
+    <div id="groupModal" class="group-modal" data-active="right" aria-hidden="true">
+      <div class="group-modal-slider" aria-hidden="true"></div>
+      <button class="group-modal-hit left" type="button">Create Group</button>
+      <button class="group-modal-hit right" type="button">Join Group</button>
+    </div>
+    <section id="createGroupCard" class="create-group-card" aria-live="polite" aria-hidden="true">
+      <p class="card-label link">Group Link:</p>
+      <input id="createGroupLinkOutput" class="card-field card-link-output link" type="text" readonly value="" />
+      <p class="card-label name">Group Name:</p>
+      <input id="createGroupNameInput" class="card-field name" type="text" value="" />
+      <button id="createGroupCardBtn" class="card-btn" type="button">Create</button>
+    </section>
+    <section id="joinGroupCard" class="join-group-card" aria-live="polite" aria-hidden="true">
+      <p class="card-label join-link">Insert Link:</p>
+      <input id="joinGroupLinkInput" class="card-field join" type="text" value="" />
+      <p id="joinGroupStatus" class="join-status"></p>
+      <button id="joinGroupCardBtn" class="card-btn join-card-btn" type="button">Join</button>
+    </section>
+    <div class="panel-backdrop" id="panelBackdrop" aria-hidden="true"></div>
+    <aside class="side-panel" aria-hidden="true" id="sidePanel">
+      <div class="side-panel-main-stack">
+        <div class="side-panel-item name" id="sidePanelName">Guest</div>
+        <div
+          class="side-panel-item location"
+          id="sidePanelLocationWrap"
+          role="button"
+          tabindex="0"
+          aria-label="Location and privacy"
+        >
+          <img src="Assets/pinpoint.png?v=2" alt="" class="side-panel-location-icon" width="41" height="51" />
+        </div>
+        <div
+          class="side-panel-item notifications"
+          id="sidePanelNotifWrap"
+          role="button"
+          tabindex="0"
+          aria-label="Notifications on"
+          aria-pressed="true"
+        >
+          <img src="Assets/notification.png?v=2" alt="" class="side-panel-notif-icon" id="sidePanelNotifIcon" width="55" height="51" />
+        </div>
+      </div>
+      <div class="side-panel-close-wrap">
+        <button
+          type="button"
+          class="side-panel-profile-hit"
+          id="sidePanelProfileMenuToggle"
+          aria-expanded="false"
+          aria-haspopup="true"
+          aria-controls="sidePanelProfileMenu"
+          aria-label="Profile photo options"
+        >
+          <img src="Assets/profile-dark.png" alt="" class="profile-image" />
+        </button>
+        <button id="closeSidePanel" class="side-panel-close-corner" type="button" aria-label="Close side panel"></button>
+      </div>
+      <div id="sidePanelProfileMenu" class="side-panel-profile-menu" aria-hidden="true" role="menu">
+        <button type="button" class="side-panel-profile-menu-item" id="sidePanelProfileChangePhoto" role="menuitem">
+          Change Profile Photo
+        </button>
+        <div class="side-panel-profile-menu-divider" aria-hidden="true"></div>
+        <button type="button" class="side-panel-profile-menu-item" id="sidePanelProfileEditPhoto" role="menuitem">
+          Edit Profile Photo
+        </button>
+      </div>
+    </aside>
+    <div class="location-consent-layer" id="locationConsentLayer" aria-hidden="true">
+      <div class="location-consent-backdrop" aria-hidden="true"></div>
+      <section
+        class="location-consent"
+        id="locationConsent"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="locationConsentTitle"
+      >
+        <div class="location-consent-header">
+          <h3 class="location-consent-title" id="locationConsentTitle">Allow &quot;Align&quot; to use your location?</h3>
+          <p class="location-consent-text">
+            We use your device location to personalize nearby routes, ride matching, and alerts. How you share location is described in our privacy practices.
+          </p>
+        </div>
+        <div class="location-consent-map-wrap">
+          <img class="location-consent-map-img" src="Assets/location-consent-map.png?v=4" alt="" width="836" height="796" />
+        </div>
+        <div class="location-consent-actions">
+          <button type="button" class="location-consent-btn" id="locationAllowOnce">Allow Once</button>
+          <button type="button" class="location-consent-btn" id="locationAllowWhile">Allow While Using App</button>
+          <button type="button" class="location-consent-btn" id="locationDontAllow">Don&rsquo;t Allow</button>
+        </div>
+        <p id="locationStatus" class="location-consent-status" aria-live="polite"></p>
+      </section>
+    </div>
+    <input type="file" id="profilePhotoFileInput" class="profile-photo-file-input" accept="image/*" tabindex="-1" />
+    <div id="profilePhotoEditBackdrop" class="profile-photo-edit-backdrop" aria-hidden="true"></div>
+    <section
+      id="profilePhotoEditModal"
+      class="profile-photo-edit-modal"
+      aria-hidden="true"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="profilePhotoEditTitle"
+    >
+      <h2 id="profilePhotoEditTitle" class="profile-photo-edit-title">Edit profile photo</h2>
+      <div class="profile-photo-edit-preview-wrap">
+        <div
+          class="profile-photo-crop-viewport"
+          id="profilePhotoCropViewport"
+          role="application"
+          aria-label="Crop: drag photo to reposition inside circle"
+        >
+          <img id="profilePhotoCropImage" alt="" width="1" height="1" />
+        </div>
+        <p class="profile-photo-crop-hint">Drag to move the photo inside the circle. Use zoom to scale before saving.</p>
+        <label class="profile-photo-crop-zoom-label" for="profilePhotoCropZoom">Zoom</label>
+        <input type="range" id="profilePhotoCropZoom" class="profile-photo-crop-zoom" min="1" max="2.75" step="0.02" value="1" />
+      </div>
+      <div class="profile-photo-edit-actions">
+        <button type="button" id="profilePhotoEditSave">Save photo</button>
+        <button type="button" id="profilePhotoEditReset">Use default photo</button>
+        <button type="button" id="profilePhotoEditCancel">Cancel</button>
+      </div>
+    </section>
+  </div>
+  <script>
+    /* MapKit JS token: https://developer.apple.com/documentation/mapkitjs/creating-a-maps-token */
+    window.PUBLIC_UTILITY_MAPKIT_TOKEN = window.PUBLIC_UTILITY_MAPKIT_TOKEN || "";
+  </script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script>
+    const frame = document.querySelector(".frame");
+    const groupsToggle = document.getElementById("groupsToggle");
+    const groupsMenu = document.getElementById("groupsMenu");
+    const sidePanel = document.getElementById("sidePanel");
+    const panelBackdrop = document.getElementById("panelBackdrop");
+    const openSidePanel = document.getElementById("openSidePanel");
+    const closeSidePanel = document.getElementById("closeSidePanel");
+    const sidePanelProfileMenuToggle = document.getElementById("sidePanelProfileMenuToggle");
+    const sidePanelProfileMenu = document.getElementById("sidePanelProfileMenu");
+    const sidePanelProfileChangePhoto = document.getElementById("sidePanelProfileChangePhoto");
+    const sidePanelProfileEditPhoto = document.getElementById("sidePanelProfileEditPhoto");
+    const profilePhotoFileInput = document.getElementById("profilePhotoFileInput");
+    const profilePhotoEditBackdrop = document.getElementById("profilePhotoEditBackdrop");
+    const profilePhotoEditModal = document.getElementById("profilePhotoEditModal");
+    const profilePhotoCropViewport = document.getElementById("profilePhotoCropViewport");
+    const profilePhotoCropImage = document.getElementById("profilePhotoCropImage");
+    const profilePhotoCropZoomSlider = document.getElementById("profilePhotoCropZoom");
+    const profilePhotoEditSave = document.getElementById("profilePhotoEditSave");
+    const profilePhotoEditReset = document.getElementById("profilePhotoEditReset");
+    const profilePhotoEditCancel = document.getElementById("profilePhotoEditCancel");
+    const locationConsentLayer = document.getElementById("locationConsentLayer");
+    const locationConsent = document.getElementById("locationConsent");
+    const locationAllowOnce = document.getElementById("locationAllowOnce");
+    const locationAllowWhile = document.getElementById("locationAllowWhile");
+    const locationDontAllow = document.getElementById("locationDontAllow");
+    const locationStatus = document.getElementById("locationStatus");
+    const sidePanelLocationWrap = document.getElementById("sidePanelLocationWrap");
+    const openGroupModal = document.getElementById("openGroupModal");
+    const groupModalBackdrop = document.getElementById("groupModalBackdrop");
+    const groupModal = document.getElementById("groupModal");
+    const createGroupCard = document.getElementById("createGroupCard");
+    const createGroupLinkOutput = document.getElementById("createGroupLinkOutput");
+    const createGroupNameInput = document.getElementById("createGroupNameInput");
+    const createGroupCardBtn = document.getElementById("createGroupCardBtn");
+    const joinGroupCard = document.getElementById("joinGroupCard");
+    const joinGroupLinkInput = document.getElementById("joinGroupLinkInput");
+    const joinGroupCardBtn = document.getElementById("joinGroupCardBtn");
+    const joinGroupStatus = document.getElementById("joinGroupStatus");
+    const openFrame19Modal = document.getElementById("openFrame19Modal");
+    const frame19Backdrop = document.getElementById("frame19Backdrop");
+    const frame19Modal = document.getElementById("frame19Modal");
+    const frame19ModeRequest = document.getElementById("frame19ModeRequest");
+    const frame19ModeOffer = document.getElementById("frame19ModeOffer");
+    const frame19Submit = document.getElementById("frame19Submit");
+    const frame19LabelTime = document.getElementById("frame19LabelTime");
+    const frame19LabelGroup = document.getElementById("frame19LabelGroup");
+    const frame19LabelComments = document.getElementById("frame19LabelComments");
+    const split = document.getElementById("offer1-4");
+    const sidePanelName = document.getElementById("sidePanelName");
+    const PROFILE_NAME_KEY = "publicUtility.profileName";
+    const GROUPS_BY_PROFILE_KEY = "publicUtility.groupsByProfile";
+    const PROFILE_PHOTO_STORAGE_KEY = "publicUtility.profilePhotoDataUrl";
+    const PROFILE_PHOTO_DEFAULT = "Assets/profile-dark.png";
+    const PROFILE_CROP_VIEWPORT_PX = 260;
+    const navEntry = performance.getEntriesByType("navigation")[0];
+    const isReload = navEntry ? navEntry.type === "reload" : performance.navigation?.type === 1;
+
+    if (isReload) {
+      localStorage.removeItem(PROFILE_NAME_KEY);
+      localStorage.removeItem(GROUPS_BY_PROFILE_KEY);
+    }
+    if (!split) throw new Error("Missing offer slider container");
+
+    const leftBtn = split.querySelector(".split-hit.left");
+    const rightBtn = split.querySelector(".split-hit.right");
+    const groupModalLeftBtn = groupModal?.querySelector(".group-modal-hit.left");
+    const groupModalRightBtn = groupModal?.querySelector(".group-modal-hit.right");
+    const normalizeProfileKey = (name) => (name || "Guest").trim().toLowerCase();
+
+    const getCurrentProfileName = () => localStorage.getItem(PROFILE_NAME_KEY)?.trim() || "Guest";
+    const GROUP_LINK_BASE = "https://public-utility.app/join";
+
+    let profilePhotoEditBaseImage = null;
+    let profilePhotoCropBaseScale = 1;
+    let profilePhotoCropZoomValue = 1;
+    let profilePhotoCropOffsetX = 0;
+    let profilePhotoCropOffsetY = 0;
+    let profilePhotoCropDragId = null;
+    let profilePhotoCropLastX = 0;
+    let profilePhotoCropLastY = 0;
+
+    const applyProfilePhotoToPage = (src) => {
+      const url = src ?? localStorage.getItem(PROFILE_PHOTO_STORAGE_KEY) ?? PROFILE_PHOTO_DEFAULT;
+      document.querySelectorAll("img.profile-image").forEach((el) => {
+        el.src = url;
+      });
+    };
+
+    const imageToResizedJpegDataUrl = (img, maxDim) => {
+      const w = img.naturalWidth;
+      const h = img.naturalHeight;
+      if (!w || !h) return "";
+      const scale = Math.min(1, maxDim / Math.max(w, h));
+      const tw = Math.max(1, Math.round(w * scale));
+      const th = Math.max(1, Math.round(h * scale));
+      const c = document.createElement("canvas");
+      c.width = tw;
+      c.height = th;
+      c.getContext("2d").drawImage(img, 0, 0, tw, th);
+      return c.toDataURL("image/jpeg", 0.88);
+    };
+
+    const setProfilePhotoEditOpen = (isOpen) => {
+      frame?.classList.toggle("profile-photo-edit-open", isOpen);
+      profilePhotoEditModal?.setAttribute("aria-hidden", String(!isOpen));
+      profilePhotoEditBackdrop?.setAttribute("aria-hidden", String(!isOpen));
+      if (!isOpen) profilePhotoEditBaseImage = null;
+    };
+
+    const clampProfilePhotoCropOffset = () => {
+      const img = profilePhotoEditBaseImage;
+      const V = PROFILE_CROP_VIEWPORT_PX;
+      if (!img?.naturalWidth) return;
+      const dispScale = profilePhotoCropBaseScale * profilePhotoCropZoomValue;
+      const dispW = img.naturalWidth * dispScale;
+      const dispH = img.naturalHeight * dispScale;
+      const maxOx = Math.max(0, (dispW - V) / 2);
+      const maxOy = Math.max(0, (dispH - V) / 2);
+      profilePhotoCropOffsetX = Math.min(maxOx, Math.max(-maxOx, profilePhotoCropOffsetX));
+      profilePhotoCropOffsetY = Math.min(maxOy, Math.max(-maxOy, profilePhotoCropOffsetY));
+    };
+
+    const syncProfilePhotoCropPreview = () => {
+      const imgEl = profilePhotoCropImage;
+      const img = profilePhotoEditBaseImage;
+      if (!imgEl || !img?.naturalWidth) return;
+      const V = PROFILE_CROP_VIEWPORT_PX;
+      const dispScale = profilePhotoCropBaseScale * profilePhotoCropZoomValue;
+      const dispW = img.naturalWidth * dispScale;
+      imgEl.style.width = `${dispW}px`;
+      imgEl.style.left = `${V / 2 + profilePhotoCropOffsetX}px`;
+      imgEl.style.top = `${V / 2 + profilePhotoCropOffsetY}px`;
+    };
+
+    const exportCircularProfilePhotoDataUrl = () => {
+      const img = profilePhotoEditBaseImage;
+      if (!img?.naturalWidth) return null;
+      const V = PROFILE_CROP_VIEWPORT_PX;
+      const OUT = 512;
+      const map = OUT / V;
+      const dispScale = profilePhotoCropBaseScale * profilePhotoCropZoomValue;
+      const dispW = img.naturalWidth * dispScale;
+      const dispH = img.naturalHeight * dispScale;
+      const left = V / 2 + profilePhotoCropOffsetX - dispW / 2;
+      const top = V / 2 + profilePhotoCropOffsetY - dispH / 2;
+      const c = document.createElement("canvas");
+      c.width = OUT;
+      c.height = OUT;
+      const ctx = c.getContext("2d");
+      ctx.beginPath();
+      ctx.arc(OUT / 2, OUT / 2, OUT / 2, 0, Math.PI * 2);
+      ctx.clip();
+      ctx.drawImage(img, left * map, top * map, dispW * map, dispH * map);
+      return c.toDataURL("image/jpeg", 0.92);
+    };
+
+    const openProfilePhotoEditor = () => {
+      const src = localStorage.getItem(PROFILE_PHOTO_STORAGE_KEY) || PROFILE_PHOTO_DEFAULT;
+      profilePhotoCropOffsetX = 0;
+      profilePhotoCropOffsetY = 0;
+      profilePhotoCropZoomValue = 1;
+      if (profilePhotoCropZoomSlider) profilePhotoCropZoomSlider.value = "1";
+      profilePhotoEditBaseImage = new Image();
+      profilePhotoEditBaseImage.onload = () => {
+        const W = profilePhotoEditBaseImage.naturalWidth;
+        const H = profilePhotoEditBaseImage.naturalHeight;
+        if (!W || !H) return;
+        profilePhotoCropBaseScale = Math.max(PROFILE_CROP_VIEWPORT_PX / W, PROFILE_CROP_VIEWPORT_PX / H);
+        const finishCropSetup = () => {
+          clampProfilePhotoCropOffset();
+          syncProfilePhotoCropPreview();
+          setProfilePhotoEditOpen(true);
+        };
+        profilePhotoCropImage.onload = finishCropSetup;
+        profilePhotoCropImage.src = profilePhotoEditBaseImage.src;
+      };
+      profilePhotoEditBaseImage.onerror = () => {
+        profilePhotoEditBaseImage = null;
+      };
+      profilePhotoEditBaseImage.src = src;
+    };
+
+    const getRandomToken = (length = 10) => {
+      const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789";
+      const bytes = new Uint8Array(length);
+      const cryptoObj = window.crypto || window.msCrypto;
+      if (cryptoObj?.getRandomValues) {
+        cryptoObj.getRandomValues(bytes);
+      } else {
+        for (let i = 0; i < length; i += 1) bytes[i] = Math.floor(Math.random() * 256);
+      }
+      let token = "";
+      for (let i = 0; i < length; i += 1) token += alphabet[bytes[i] % alphabet.length];
+      return token;
+    };
+
+    const buildGroupLink = () => `${GROUP_LINK_BASE}?code=${getRandomToken(12)}`;
+
+    const persistCreatedGroup = (groupName, link) => {
+      const profileName = getCurrentProfileName();
+      const profileKey = normalizeProfileKey(profileName);
+      const allGroups = JSON.parse(localStorage.getItem(GROUPS_BY_PROFILE_KEY) || "{}");
+      const existingGroups = Array.isArray(allGroups[profileKey]) ? allGroups[profileKey] : [];
+      const cleanedGroupName = groupName.trim();
+      const entry = { name: cleanedGroupName, link, createdAt: Date.now() };
+      const deduped = [entry, ...existingGroups.filter((item) => item.name !== cleanedGroupName)].slice(0, 20);
+      allGroups[profileKey] = deduped;
+      localStorage.setItem(GROUPS_BY_PROFILE_KEY, JSON.stringify(allGroups));
+    };
+
+    const findGroupByLink = (link) => {
+      const allGroups = JSON.parse(localStorage.getItem(GROUPS_BY_PROFILE_KEY) || "{}");
+      const trimmedLink = (link || "").trim();
+      const profileKeys = Object.keys(allGroups);
+      for (const key of profileKeys) {
+        const groups = Array.isArray(allGroups[key]) ? allGroups[key] : [];
+        const match = groups.find((group) => (group.link || "").trim() === trimmedLink);
+        if (match) return match;
+      }
+      return null;
+    };
+
+    const addGroupToCurrentProfile = (group) => {
+      const profileName = getCurrentProfileName();
+      const profileKey = normalizeProfileKey(profileName);
+      const allGroups = JSON.parse(localStorage.getItem(GROUPS_BY_PROFILE_KEY) || "{}");
+      const existingGroups = Array.isArray(allGroups[profileKey]) ? allGroups[profileKey] : [];
+      const merged = [
+        { name: group.name, link: group.link, createdAt: group.createdAt || Date.now() },
+        ...existingGroups.filter((item) => item.name !== group.name && item.link !== group.link)
+      ].slice(0, 20);
+      allGroups[profileKey] = merged;
+      localStorage.setItem(GROUPS_BY_PROFILE_KEY, JSON.stringify(allGroups));
+    };
+
+    const renderGroupsMenu = () => {
+      if (!groupsMenu) return;
+      const profileName = getCurrentProfileName();
+      const allGroups = JSON.parse(localStorage.getItem(GROUPS_BY_PROFILE_KEY) || "{}");
+      const groupsForProfile = allGroups[normalizeProfileKey(profileName)] || [];
+      groupsMenu.innerHTML = "";
+
+      if (!groupsForProfile.length) {
+        const empty = document.createElement("button");
+        empty.className = "groups-menu-item";
+        empty.type = "button";
+        empty.textContent = "No groups yet";
+        groupsMenu.appendChild(empty);
+        return;
+      }
+
+      groupsForProfile.forEach((group, index) => {
+        const item = document.createElement("button");
+        item.className = "groups-menu-item";
+        item.type = "button";
+        item.textContent = group.name;
+        item.title = group.link || group.name;
+        groupsMenu.appendChild(item);
+
+        if (index < groupsForProfile.length - 1) {
+          const divider = document.createElement("div");
+          divider.className = "groups-menu-divider";
+          divider.setAttribute("aria-hidden", "true");
+          groupsMenu.appendChild(divider);
+        }
+      });
+    };
+
+    if (sidePanelName) {
+      sidePanelName.textContent = getCurrentProfileName();
+    }
+    renderGroupsMenu();
+    applyProfilePhotoToPage();
+
+    const setGroupsMenuOpen = (isOpen) => {
+      frame?.classList.toggle("groups-open", isOpen);
+      groupsToggle?.setAttribute("aria-expanded", String(isOpen));
+      groupsMenu?.setAttribute("aria-hidden", String(!isOpen));
+      if (isOpen) setProfilePhotoMenuOpen(false);
+    };
+
+    const setProfilePhotoMenuOpen = (isOpen) => {
+      frame?.classList.toggle("side-panel-profile-menu-open", isOpen);
+      sidePanelProfileMenu?.setAttribute("aria-hidden", String(!isOpen));
+      sidePanelProfileMenuToggle?.setAttribute("aria-expanded", String(isOpen));
+    };
+
+    const setSidePanelOpen = (isOpen) => {
+      frame?.classList.toggle("panel-open", isOpen);
+      sidePanel?.setAttribute("aria-hidden", String(!isOpen));
+      if (!isOpen) {
+        setProfilePhotoMenuOpen(false);
+        setProfilePhotoEditOpen(false);
+      }
+    };
+
+    const setLocationConsentOpen = (isOpen) => {
+      if (isOpen) setProfilePhotoEditOpen(false);
+      frame?.classList.toggle("location-consent-open", isOpen);
+      locationConsentLayer?.setAttribute("aria-hidden", String(!isOpen));
+    };
+
+    const setGroupModalOpen = (isOpen) => {
+      if (isOpen) setProfilePhotoEditOpen(false);
+      frame?.classList.toggle("group-modal-open", isOpen);
+      groupModal?.setAttribute("aria-hidden", String(!isOpen));
+      groupModalBackdrop?.setAttribute("aria-hidden", String(!isOpen));
+    };
+
+    const setGroupCardOpen = (cardType) => {
+      const showCreate = cardType === "create";
+      const showJoin = cardType === "join";
+      frame?.classList.toggle("group-card-open", Boolean(cardType));
+      createGroupCard?.classList.toggle("visible", showCreate);
+      joinGroupCard?.classList.toggle("visible", showJoin);
+      createGroupCard?.setAttribute("aria-hidden", String(!showCreate));
+      joinGroupCard?.setAttribute("aria-hidden", String(!showJoin));
+      groupModalBackdrop?.setAttribute("aria-hidden", String(!cardType));
+    };
+
+    const setFrame19Open = (isOpen) => {
+      if (isOpen) setProfilePhotoEditOpen(false);
+      frame?.classList.toggle("frame19-open", isOpen);
+      frame19Modal?.setAttribute("aria-hidden", String(!isOpen));
+      frame19Backdrop?.setAttribute("aria-hidden", String(!isOpen));
+    };
+
+    const setFrame19Mode = (mode) => {
+      if (!frame19Modal) return;
+      const nextMode = mode === "request" ? "request" : "offer";
+      frame19Modal.dataset.mode = nextMode;
+      if (frame19LabelTime) frame19LabelTime.textContent = "Date";
+      if (frame19LabelComments) frame19LabelComments.textContent = "Comments:";
+      if (frame19LabelGroup) {
+        frame19LabelGroup.textContent = nextMode === "request" ? "# in Group" : "# of seats in car";
+      }
+      if (frame19Submit) {
+        frame19Submit.textContent = nextMode === "request" ? "Request Ride" : "Offer Ride";
+      }
+      syncOfferGroupWheelForMode();
+    };
+
+    const OFFER_RIDES_KEY = "publicUtility.offerRides";
+    const OFFER_RIDE_SLOT_IDS = ["offer1-5", "offer1-6", "offer1-7"];
+    const PHOTON_SEARCH_OFFER = "https://photon.komoot.io/api/";
+    let offerRideGeoDraft = { pointA: null, pointB: null };
+    let offerRideSuggestTimers = { a: null, b: null };
+    let offerRideListMaps = [];
+    let mapkitOfferLoadPromise = null;
+    const OFFER_GROUP_WHEEL_ITEM_H = 32;
+    let offerGroupWheelState = { count: 4 };
+    let offerGroupWheelIgnoreScroll = false;
+    let offerGroupWheelWired = false;
+
+    const destroyOfferRideMaps = () => {
+      offerRideListMaps.forEach((entry) => {
+        try {
+          if (entry.kind === "mapkit") entry.map.destroy();
+          else entry.map.remove();
+        } catch {
+          /* ignore */
+        }
+      });
+      offerRideListMaps = [];
+    };
+
+    const getMapKitReadyPromiseOffer = () => {
+      const token = (window.PUBLIC_UTILITY_MAPKIT_TOKEN || "").trim();
+      if (!token) return Promise.resolve(false);
+      if (window.mapkit?.Map) return Promise.resolve(true);
+      if (!mapkitOfferLoadPromise) {
+        mapkitOfferLoadPromise = new Promise((resolve) => {
+          let settled = false;
+          const finish = (ok) => {
+            if (settled) return;
+            settled = true;
+            resolve(Boolean(ok && window.mapkit?.Map));
+          };
+          window.__mapKitReadyCallbackOffer = () => finish(true);
+          const s = document.createElement("script");
+          s.src = "https://cdn.apple-mapkit.com/mk/5.x.x/mapkit.core.js";
+          s.crossOrigin = "anonymous";
+          s.async = true;
+          s.setAttribute("data-callback", "__mapKitReadyCallbackOffer");
+          s.setAttribute("data-libraries", "full-map,overlays,annotations");
+          s.setAttribute("data-token", token);
+          s.onerror = () => finish(false);
+          document.head.appendChild(s);
+          window.setTimeout(() => finish(Boolean(window.mapkit?.Map)), 15000);
+        });
+      }
+      return mapkitOfferLoadPromise;
+    };
+
+    const formatPhotonLabelOffer = (feature) => {
+      const p = feature?.properties || {};
+      const parts = [p.name, p.street, p.city, p.state, p.country].filter(Boolean);
+      const uniq = [...new Set(parts)];
+      return uniq.join(", ") || "Selected place";
+    };
+
+    const fetchPhotonSuggestionsOffer = async (q) => {
+      const query = (q || "").trim();
+      if (query.length < 2) return [];
+      const url = `${PHOTON_SEARCH_OFFER}?q=${encodeURIComponent(query)}&limit=6`;
+      const res = await fetch(url);
+      if (!res.ok) return [];
+      const data = await res.json();
+      return Array.isArray(data.features) ? data.features : [];
+    };
+
+    const hideOfferSuggest = (which) => {
+      const el = document.getElementById(which === "a" ? "frame19SuggestA" : "frame19SuggestB");
+      if (el) {
+        el.hidden = true;
+        el.innerHTML = "";
+      }
+    };
+
+    const showOfferSuggest = (which, features, onPick) => {
+      const el = document.getElementById(which === "a" ? "frame19SuggestA" : "frame19SuggestB");
+      if (!el) return;
+      el.innerHTML = "";
+      if (!features.length) {
+        el.hidden = true;
+        return;
+      }
+      features.forEach((f) => {
+        const li = document.createElement("li");
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.textContent = formatPhotonLabelOffer(f);
+        btn.addEventListener("mousedown", (ev) => ev.preventDefault());
+        btn.addEventListener("click", () => onPick(f));
+        li.appendChild(btn);
+        el.appendChild(li);
+      });
+      el.hidden = false;
+    };
+
+    const wireOfferAddressInput = (which) => {
+      const input = document.querySelector(`.frame19-input.point-${which}`);
+      if (!input) return;
+      const key = which === "a" ? "pointA" : "pointB";
+      input.addEventListener("input", () => {
+        if (which === "a") offerRideGeoDraft.pointA = null;
+        else offerRideGeoDraft.pointB = null;
+        const tkey = which === "a" ? "a" : "b";
+        if (offerRideSuggestTimers[tkey]) window.clearTimeout(offerRideSuggestTimers[tkey]);
+        offerRideSuggestTimers[tkey] = window.setTimeout(async () => {
+          try {
+            const feats = await fetchPhotonSuggestionsOffer(input.value);
+            showOfferSuggest(which, feats, (f) => {
+              const [lon, lat] = f.geometry.coordinates;
+              offerRideGeoDraft[key] = { lat, lon };
+              input.value = formatPhotonLabelOffer(f);
+              hideOfferSuggest(which);
+            });
+          } catch {
+            hideOfferSuggest(which);
+          }
+        }, 420);
+      });
+      input.addEventListener("blur", () => {
+        window.setTimeout(() => hideOfferSuggest(which), 180);
+      });
+    };
+
+    const OFFER_DATE_WHEEL_ITEM_H = 32;
+    const OFFER_MONTH_NAMES_SHORT = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+    const daysInMonthOffer = (year, monthIndex) => new Date(year, monthIndex + 1, 0).getDate();
+
+    const offerYearPickerList = () => {
+      const y0 = new Date().getFullYear() - 1;
+      const years = [];
+      for (let i = 0; i < 5; i += 1) years.push(y0 + i);
+      return years;
+    };
+
+    let offerDateWheelState = { y: new Date().getFullYear(), m: new Date().getMonth(), d: new Date().getDate() };
+    let offerDateWheelIgnoreScroll = false;
+    let offerDateWheelWired = false;
+
+    const getOfferDateWheelEls = () => {
+      const root = document.getElementById("frame19DateWheel");
+      if (!root) return null;
+      return {
+        root,
+        month: root.querySelector('[data-date-wheel="month"]'),
+        day: root.querySelector('[data-date-wheel="day"]'),
+        year: root.querySelector('[data-date-wheel="year"]')
+      };
+    };
+
+    const formatOfferPickedDate = () => {
+      const { y, m, d } = offerDateWheelState;
+      const date = new Date(y, m, d);
+      return date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    };
+
+    const setOfferColScroll = (el, index, maxIndex) => {
+      const i = Math.max(0, Math.min(maxIndex, index));
+      const top = i * OFFER_DATE_WHEEL_ITEM_H;
+      offerDateWheelIgnoreScroll = true;
+      el.scrollTo({ top, behavior: "instant" });
+      requestAnimationFrame(() => {
+        offerDateWheelIgnoreScroll = false;
+      });
+    };
+
+    const fillOfferYearCol = (yearCol) => {
+      const years = offerYearPickerList();
+      yearCol.innerHTML = "";
+      years.forEach((y) => {
+        const row = document.createElement("div");
+        row.className = "frame19-date-wheel-item";
+        row.textContent = String(y);
+        yearCol.appendChild(row);
+      });
+      return years;
+    };
+
+    const fillOfferMonthCol = (monthCol) => {
+      monthCol.innerHTML = "";
+      OFFER_MONTH_NAMES_SHORT.forEach((name, m) => {
+        const row = document.createElement("div");
+        row.className = "frame19-date-wheel-item";
+        row.textContent = name;
+        row.dataset.value = String(m);
+        monthCol.appendChild(row);
+      });
+    };
+
+    const fillOfferDayCol = (dayCol) => {
+      const { y, m } = offerDateWheelState;
+      const maxD = daysInMonthOffer(y, m);
+      if (offerDateWheelState.d > maxD) offerDateWheelState.d = maxD;
+      dayCol.innerHTML = "";
+      for (let day = 1; day <= maxD; day += 1) {
+        const row = document.createElement("div");
+        row.className = "frame19-date-wheel-item";
+        row.textContent = String(day);
+        row.dataset.value = String(day);
+        dayCol.appendChild(row);
+      }
+    };
+
+    const syncOfferDateWheelScrollPositions = () => {
+      const els = getOfferDateWheelEls();
+      if (!els?.month || !els.day || !els.year) return;
+      const years = fillOfferYearCol(els.year);
+      fillOfferMonthCol(els.month);
+      fillOfferDayCol(els.day);
+      let yi = years.indexOf(offerDateWheelState.y);
+      if (yi < 0) {
+        yi = Math.max(0, Math.min(years.length - 1, 2));
+        offerDateWheelState.y = years[yi];
+        fillOfferDayCol(els.day);
+      }
+      const maxD = daysInMonthOffer(offerDateWheelState.y, offerDateWheelState.m);
+      setOfferColScroll(els.year, yi, years.length - 1);
+      setOfferColScroll(els.month, offerDateWheelState.m, 11);
+      setOfferColScroll(els.day, offerDateWheelState.d - 1, maxD - 1);
+    };
+
+    const bindOfferDateWheelScrollEnd = (col, onSettled) => {
+      let t = null;
+      col.addEventListener(
+        "scroll",
+        () => {
+          if (offerDateWheelIgnoreScroll) return;
+          if (t) window.clearTimeout(t);
+          t = window.setTimeout(() => {
+            const maxIdx = Math.max(0, col.children.length - 1);
+            let idx = Math.round(col.scrollTop / OFFER_DATE_WHEEL_ITEM_H);
+            idx = Math.max(0, Math.min(maxIdx, idx));
+            if (Math.abs(col.scrollTop - idx * OFFER_DATE_WHEEL_ITEM_H) > 0.5) {
+              setOfferColScroll(col, idx, maxIdx);
+            }
+            onSettled(idx);
+          }, 45);
+        },
+        { passive: true }
+      );
+    };
+
+    const wireOfferDateWheel = () => {
+      if (offerDateWheelWired) return;
+      const els = getOfferDateWheelEls();
+      if (!els?.month || !els.day || !els.year) return;
+      offerDateWheelWired = true;
+      syncOfferDateWheelScrollPositions();
+
+      bindOfferDateWheelScrollEnd(els.month, (idx) => {
+        if (idx === offerDateWheelState.m) return;
+        offerDateWheelState.m = idx;
+        fillOfferDayCol(els.day);
+        const maxD = daysInMonthOffer(offerDateWheelState.y, offerDateWheelState.m);
+        if (offerDateWheelState.d > maxD) offerDateWheelState.d = maxD;
+        setOfferColScroll(els.day, offerDateWheelState.d - 1, maxD - 1);
+      });
+
+      bindOfferDateWheelScrollEnd(els.day, (idx) => {
+        const maxD = daysInMonthOffer(offerDateWheelState.y, offerDateWheelState.m);
+        const day = Math.min(maxD, Math.max(1, idx + 1));
+        offerDateWheelState.d = day;
+      });
+
+      bindOfferDateWheelScrollEnd(els.year, (idx) => {
+        const years = offerYearPickerList();
+        const y = years[idx];
+        if (y == null || y === offerDateWheelState.y) return;
+        offerDateWheelState.y = y;
+        fillOfferDayCol(els.day);
+        const maxD = daysInMonthOffer(offerDateWheelState.y, offerDateWheelState.m);
+        if (offerDateWheelState.d > maxD) offerDateWheelState.d = maxD;
+        setOfferColScroll(els.day, offerDateWheelState.d - 1, maxD - 1);
+      });
+    };
+
+    const resetOfferDateWheel = () => {
+      const n = new Date();
+      offerDateWheelState = { y: n.getFullYear(), m: n.getMonth(), d: n.getDate() };
+      syncOfferDateWheelScrollPositions();
+    };
+
+    const getOfferDateWheelString = () => formatOfferPickedDate();
+
+    const offerGroupWheelMaxForMode = () => (frame19Modal?.dataset.mode === "request" ? 30 : 8);
+
+    const getOfferGroupWheelEl = () =>
+      document.querySelector('#frame19GroupWheel [data-group-wheel="count"]');
+
+    const setOfferGroupWheelScroll = (el, index, maxIndex) => {
+      const i = Math.max(0, Math.min(maxIndex, index));
+      offerGroupWheelIgnoreScroll = true;
+      el.scrollTo({ top: i * OFFER_GROUP_WHEEL_ITEM_H, behavior: "instant" });
+      requestAnimationFrame(() => {
+        offerGroupWheelIgnoreScroll = false;
+      });
+    };
+
+    const syncOfferGroupWheelForMode = () => {
+      const col = getOfferGroupWheelEl();
+      if (!col) return;
+      const max = offerGroupWheelMaxForMode();
+      if (offerGroupWheelState.count > max) offerGroupWheelState.count = max;
+      if (offerGroupWheelState.count < 1) offerGroupWheelState.count = 1;
+      col.innerHTML = "";
+      for (let i = 1; i <= max; i += 1) {
+        const row = document.createElement("div");
+        row.className = "frame19-group-wheel-item";
+        row.textContent = String(i);
+        col.appendChild(row);
+      }
+      setOfferGroupWheelScroll(col, offerGroupWheelState.count - 1, max - 1);
+    };
+
+    const wireOfferGroupWheel = () => {
+      if (offerGroupWheelWired) return;
+      const col = getOfferGroupWheelEl();
+      if (!col) return;
+      offerGroupWheelWired = true;
+      syncOfferGroupWheelForMode();
+      let t = null;
+      col.addEventListener(
+        "scroll",
+        () => {
+          if (offerGroupWheelIgnoreScroll) return;
+          if (t) window.clearTimeout(t);
+          t = window.setTimeout(() => {
+            const maxIdx = Math.max(0, col.children.length - 1);
+            let idx = Math.round(col.scrollTop / OFFER_GROUP_WHEEL_ITEM_H);
+            idx = Math.max(0, Math.min(maxIdx, idx));
+            if (Math.abs(col.scrollTop - idx * OFFER_GROUP_WHEEL_ITEM_H) > 0.5) {
+              setOfferGroupWheelScroll(col, idx, maxIdx);
+            }
+            offerGroupWheelState.count = idx + 1;
+          }, 45);
+        },
+        { passive: true }
+      );
+    };
+
+    const getOfferGroupWheelValue = () => String(offerGroupWheelState.count);
+
+    const resetOfferGroupWheel = () => {
+      offerGroupWheelState.count = 4;
+      syncOfferGroupWheelForMode();
+    };
+
+    const clearFrame19Form = () => {
+      resetOfferDateWheel();
+      resetOfferGroupWheel();
+      const pa = document.querySelector(".frame19-input.point-a");
+      const pb = document.querySelector(".frame19-input.point-b");
+      if (pa) pa.value = "";
+      if (pb) pb.value = "";
+      document.querySelector(".frame19-input.comments") && (document.querySelector(".frame19-input.comments").value = "");
+      offerRideGeoDraft = { pointA: null, pointB: null };
+      hideOfferSuggest("a");
+      hideOfferSuggest("b");
+    };
+
+    const loadOfferRides = () => {
+      try {
+        const raw = localStorage.getItem(OFFER_RIDES_KEY);
+        const arr = JSON.parse(raw || "[]");
+        return Array.isArray(arr) ? arr : [];
+      } catch {
+        return [];
+      }
+    };
+
+    const saveOfferRides = (rides) => {
+      localStorage.setItem(OFFER_RIDES_KEY, JSON.stringify(rides.slice(0, 40)));
+    };
+
+    const buildAppleMapsDirectionsUrlOffer = (latA, lonA, latB, lonB) => {
+      const s = `${latA},${lonA}`;
+      const d = `${latB},${lonB}`;
+      return `https://maps.apple.com/?saddr=${encodeURIComponent(s)}&daddr=${encodeURIComponent(d)}`;
+    };
+
+    const openAppleMapsRouteOffer = (latA, lonA, latB, lonB) => {
+      const url = buildAppleMapsDirectionsUrlOffer(latA, lonA, latB, lonB);
+      const mapsApp = `maps://?saddr=${encodeURIComponent(`${latA},${lonA}`)}&daddr=${encodeURIComponent(`${latB},${lonB}`)}`;
+      const ua = navigator.userAgent || "";
+      const isApple =
+        /iPhone|iPad|iPod/i.test(ua) ||
+        (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1) ||
+        (/Macintosh/i.test(ua) && navigator.maxTouchPoints === 0);
+      if (isApple) {
+        window.location.href = mapsApp;
+      } else {
+        window.open(url, "_blank", "noopener,noreferrer");
+      }
+    };
+
+    const attachAppleMapsLinkToContainerOffer = (container, ride) => {
+      if (!container || ride.latA == null || ride.lonA == null || ride.latB == null || ride.lonB == null) return;
+      container.classList.add("ride-summary-map--apple");
+      container.setAttribute("role", "link");
+      container.setAttribute("tabindex", "0");
+      container.setAttribute("aria-label", "Open this route in Apple Maps");
+      const go = (ev) => {
+        ev.preventDefault();
+        ev.stopPropagation();
+        openAppleMapsRouteOffer(ride.latA, ride.lonA, ride.latB, ride.lonB);
+      };
+      container.addEventListener("click", go);
+      container.addEventListener("keydown", (ev) => {
+        if (ev.key === "Enter" || ev.key === " ") {
+          go(ev);
+        }
+      });
+    };
+
+    const initOfferRideMapEl = async (container, ride) => {
+      if (!container) return;
+      const a = ride.pointA && ride.latA != null && ride.lonA != null;
+      const b = ride.pointB && ride.latB != null && ride.lonB != null;
+      if (!a && !b) {
+        container.textContent = "";
+        return;
+      }
+      const mkOk = await getMapKitReadyPromiseOffer();
+      if (mkOk && window.mapkit?.Map) {
+        try {
+          container.innerHTML = "";
+          const mkMap = window.mapkit;
+          const colorSchemeEnum = mkMap.ColorScheme ?? mkMap.Map?.ColorScheme;
+          const featureVis = mkMap.FeatureVisibility ?? mkMap.Map?.FeatureVisibility;
+          const schemeDark = colorSchemeEnum?.Dark;
+          const mapOpts = {
+            mapType: mkMap.Map.MapTypes.Standard,
+            showsMapTypeControl: false,
+            showsCompass: featureVis?.Hidden != null ? featureVis.Hidden : false,
+            showsZoomControl: false,
+            showsUserLocationControl: false,
+            isZoomEnabled: false,
+            isScrollEnabled: false,
+            isRotationEnabled: false
+          };
+          if (schemeDark != null) mapOpts.colorScheme = schemeDark;
+          const map = new mkMap.Map(container, mapOpts);
+          if (schemeDark != null && "colorScheme" in map) {
+            try {
+              map.colorScheme = schemeDark;
+            } catch {
+              /* ignore */
+            }
+          }
+          offerRideListMaps.push({ kind: "mapkit", map });
+          const line = [];
+          if (a) line.push(new mkMap.Coordinate(ride.latA, ride.lonA));
+          if (b) line.push(new mkMap.Coordinate(ride.latB, ride.lonB));
+          if (line.length === 2) {
+            const style = new mkMap.Style({
+              strokeColor: "#0A84FF",
+              lineWidth: 4,
+              lineJoin: "round",
+              lineCap: "round"
+            });
+            const poly = new mkMap.PolylineOverlay(line, { style });
+            map.addOverlay(poly);
+            const annA = new mkMap.MarkerAnnotation(line[0], {
+              color: "#0A84FF",
+              glyphText: "A",
+              glyphColor: "#FFFFFF"
+            });
+            const annB = new mkMap.MarkerAnnotation(line[1], {
+              color: "#32D74B",
+              glyphText: "B",
+              glyphColor: "#FFFFFF"
+            });
+            map.addAnnotation(annA);
+            map.addAnnotation(annB);
+            try {
+              const pad =
+                typeof mkMap.Padding === "function" ? new mkMap.Padding(14, 14, 14, 14) : null;
+              map.showItems([poly, annA, annB], pad ? { padding: pad } : {});
+            } catch {
+              const cLat = (ride.latA + ride.latB) / 2;
+              const cLon = (ride.lonA + ride.lonB) / 2;
+              const latSpan = Math.max(Math.abs(ride.latA - ride.latB) * 1.45, 0.035);
+              const lonSpan = Math.max(Math.abs(ride.lonA - ride.lonB) * 1.45, 0.035);
+              map.region = new mkMap.CoordinateRegion(
+                new mkMap.Coordinate(cLat, cLon),
+                new mkMap.CoordinateSpan(latSpan, lonSpan)
+              );
+            }
+            attachAppleMapsLinkToContainerOffer(container, ride);
+          } else if (line.length === 1) {
+            const ann = new mkMap.MarkerAnnotation(line[0], { color: "#0A84FF", glyphText: "·" });
+            map.addAnnotation(ann);
+            map.region = new mkMap.CoordinateRegion(
+              line[0],
+              new mkMap.CoordinateSpan(0.06, 0.06)
+            );
+          }
+          return;
+        } catch (err) {
+          console.warn("MapKit JS failed, using fallback map", err);
+          container.innerHTML = "";
+        }
+      }
+      if (typeof L === "undefined") return;
+      container.classList.add("ride-summary-map--leaflet-dark");
+      const map = L.map(container, {
+        zoomControl: false,
+        dragging: false,
+        scrollWheelZoom: false,
+        attributionControl: false
+      });
+      offerRideListMaps.push({ kind: "leaflet", map });
+      L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
+        maxZoom: 20,
+        subdomains: "abcd"
+      }).addTo(map);
+      const line = [];
+      if (a) line.push([ride.latA, ride.lonA]);
+      if (b) line.push([ride.latB, ride.lonB]);
+      if (line.length === 2) {
+        L.polyline(line, { color: "#0A84FF", weight: 3, opacity: 0.92 }).addTo(map);
+        L.circleMarker(line[0], { radius: 5, color: "#1a1f29", fillColor: "#0A84FF", fillOpacity: 1, weight: 2 }).addTo(map);
+        L.circleMarker(line[1], { radius: 5, color: "#1a1f29", fillColor: "#32D74B", fillOpacity: 1, weight: 2 }).addTo(map);
+        map.fitBounds(line, { padding: [10, 10], maxZoom: 14 });
+        attachAppleMapsLinkToContainerOffer(container, ride);
+      } else if (line.length === 1) {
+        L.circleMarker(line[0], { radius: 6, color: "#1a1f29", fillColor: "#0A84FF", fillOpacity: 1, weight: 2 }).addTo(map);
+        map.setView(line[0], 12);
+      }
+      window.requestAnimationFrame(() => {
+        try {
+          map.invalidateSize();
+        } catch {
+          /* ignore */
+        }
+      });
+    };
+
+    const renderOfferRideList = async () => {
+      destroyOfferRideMaps();
+      const rides = loadOfferRides()
+        .sort((x, y) => (y.createdAt || 0) - (x.createdAt || 0))
+        .slice(0, 3);
+      for (let index = 0; index < OFFER_RIDE_SLOT_IDS.length; index += 1) {
+        const slotId = OFFER_RIDE_SLOT_IDS[index];
+        const slot = document.getElementById(slotId);
+        if (!slot) continue;
+        slot.innerHTML = "";
+        const ride = rides[index];
+        if (!ride) continue;
+        const card = document.createElement("div");
+        card.className = "ride-summary-card";
+        const text = document.createElement("div");
+        text.className = "ride-summary-text";
+        const h = document.createElement("p");
+        h.className = "ride-heading";
+        h.textContent = ride.time?.trim() || "Ride";
+        const r1 = document.createElement("p");
+        r1.className = "ride-line";
+        r1.textContent = ride.pointA ? `A: ${ride.pointA}` : "";
+        const r2 = document.createElement("p");
+        r2.className = "ride-line";
+        r2.textContent = ride.pointB ? `B: ${ride.pointB}` : "";
+        const g = document.createElement("p");
+        g.className = "ride-line";
+        g.textContent = ride.group ? String(ride.group) : "";
+        const c = document.createElement("p");
+        c.className = "ride-line";
+        c.textContent = ride.comments ? ride.comments : "";
+        text.append(h, r1, r2, g, c);
+        const mapEl = document.createElement("div");
+        mapEl.className = "ride-summary-map";
+        mapEl.id = `offerRideMap-${index}`;
+        card.append(text, mapEl);
+        slot.appendChild(card);
+        await initOfferRideMapEl(mapEl, ride);
+      }
+    };
+
+    wireOfferAddressInput("a");
+    wireOfferAddressInput("b");
+    wireOfferDateWheel();
+    wireOfferGroupWheel();
+
+    const POPUP_NAV_STATE_KEY = "publicUtility.popupNavState";
+    const isCurrentPage = (targetPage) => window.location.pathname.endsWith(`/${targetPage}`) || window.location.pathname.endsWith(targetPage);
+
+    const savePopupNavState = (state) => {
+      if (!state) return;
+      sessionStorage.setItem(POPUP_NAV_STATE_KEY, JSON.stringify(state));
+    };
+
+    const restorePopupNavState = () => {
+      const rawState = sessionStorage.getItem(POPUP_NAV_STATE_KEY);
+      if (!rawState) return;
+      sessionStorage.removeItem(POPUP_NAV_STATE_KEY);
+      try {
+        const state = JSON.parse(rawState);
+        if (state?.targetPopup !== "frame19") return;
+        setFrame19Mode(state.mode === "request" ? "request" : "offer");
+        setFrame19Open(true);
+      } catch {
+        sessionStorage.removeItem(POPUP_NAV_STATE_KEY);
+      }
+    };
+
+    const navigateToPage = (targetPage, transitionClass, popupState = null) => {
+      if (isCurrentPage(targetPage)) return;
+      savePopupNavState(popupState);
+      setGroupsMenuOpen(false);
+      setProfilePhotoMenuOpen(false);
+      setProfilePhotoEditOpen(false);
+      setSidePanelOpen(false);
+      setGroupModalOpen(false);
+      setGroupCardOpen(null);
+      if (transitionClass) {
+        document.body.classList.add(transitionClass);
+        frame?.classList.add(transitionClass);
+      }
+      window.setTimeout(() => {
+        window.location.href = targetPage;
+      }, 240);
+    };
+
+    restorePopupNavState();
+    renderOfferRideList();
+
+    const isGroupCardOpen = () =>
+      Boolean(frame?.classList.contains("group-card-open") && (createGroupCard?.classList.contains("visible") || joinGroupCard?.classList.contains("visible")));
+
+    groupsToggle?.addEventListener("click", (event) => {
+      event.stopPropagation();
+      const next = !(frame?.classList.contains("groups-open"));
+      setSidePanelOpen(false);
+      setProfilePhotoMenuOpen(false);
+      setGroupsMenuOpen(next);
+    });
+
+    groupsMenu?.addEventListener("click", (event) => {
+      event.stopPropagation();
+    });
+
+    document.addEventListener("click", () => {
+      setGroupsMenuOpen(false);
+      setProfilePhotoMenuOpen(false);
+      setProfilePhotoEditOpen(false);
+      setSidePanelOpen(false);
+      setFrame19Open(false);
+      if (isGroupCardOpen()) {
+        setGroupCardOpen(null);
+        setGroupModalOpen(true);
+      } else {
+        setGroupModalOpen(false);
+        setGroupCardOpen(null);
+      }
+    });
+
+    openSidePanel?.addEventListener("click", (event) => {
+      event.stopPropagation();
+      setGroupsMenuOpen(false);
+      setProfilePhotoMenuOpen(false);
+      setProfilePhotoEditOpen(false);
+      setSidePanelOpen(true);
+    });
+
+    closeSidePanel?.addEventListener("click", (event) => {
+      event.stopPropagation();
+      setSidePanelOpen(false);
+    });
+
+    const NOTIF_ICON_ON = "Assets/notification.png?v=2";
+    const NOTIF_ICON_OFF = "Assets/nonotification.png?v=2";
+    const sidePanelNotifWrap = document.getElementById("sidePanelNotifWrap");
+    const sidePanelNotifIcon = document.getElementById("sidePanelNotifIcon");
+
+    const syncNotifAria = () => {
+      const muted = sidePanelNotifIcon?.src.includes("nonotification.png");
+      sidePanelNotifWrap?.setAttribute("aria-pressed", muted ? "false" : "true");
+      sidePanelNotifWrap?.setAttribute("aria-label", muted ? "Notifications muted" : "Notifications on");
+    };
+
+    const toggleSidePanelNotif = () => {
+      if (!sidePanelNotifIcon) return;
+      const muted = sidePanelNotifIcon.src.includes("nonotification.png");
+      sidePanelNotifIcon.src = muted ? NOTIF_ICON_ON : NOTIF_ICON_OFF;
+      syncNotifAria();
+    };
+
+    sidePanelNotifWrap?.addEventListener("click", (event) => {
+      event.stopPropagation();
+      toggleSidePanelNotif();
+    });
+
+    sidePanelNotifWrap?.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        event.stopPropagation();
+        toggleSidePanelNotif();
+      }
+    });
+
+    sidePanel?.addEventListener("click", (event) => {
+      event.stopPropagation();
+      if (!frame?.classList.contains("side-panel-profile-menu-open")) return;
+      const t = event.target;
+      if (sidePanelProfileMenu?.contains(t)) return;
+      if (sidePanelProfileMenuToggle?.contains(t)) return;
+      setProfilePhotoMenuOpen(false);
+    });
+
+    locationConsentLayer?.addEventListener("click", (event) => {
+      event.stopPropagation();
+    });
+
+    const openLocationConsentFromPin = () => {
+      if (locationStatus) locationStatus.textContent = "";
+      setLocationConsentOpen(true);
+    };
+
+    sidePanelLocationWrap?.addEventListener("click", (event) => {
+      event.stopPropagation();
+      openLocationConsentFromPin();
+    });
+
+    sidePanelLocationWrap?.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        event.stopPropagation();
+        openLocationConsentFromPin();
+      }
+    });
+
+    sidePanelProfileMenuToggle?.addEventListener("click", (event) => {
+      event.stopPropagation();
+      setGroupsMenuOpen(false);
+      const next = !frame?.classList.contains("side-panel-profile-menu-open");
+      setProfilePhotoMenuOpen(next);
+    });
+
+    sidePanelProfileMenu?.addEventListener("click", (event) => {
+      event.stopPropagation();
+    });
+
+    sidePanelProfileChangePhoto?.addEventListener("click", (event) => {
+      event.stopPropagation();
+      setProfilePhotoMenuOpen(false);
+      window.requestAnimationFrame(() => profilePhotoFileInput?.click());
+    });
+
+    sidePanelProfileEditPhoto?.addEventListener("click", (event) => {
+      event.stopPropagation();
+      setProfilePhotoMenuOpen(false);
+      openProfilePhotoEditor();
+    });
+
+    profilePhotoFileInput?.addEventListener("change", () => {
+      const file = profilePhotoFileInput.files?.[0];
+      profilePhotoFileInput.value = "";
+      if (!file?.type.startsWith("image/")) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        const img = new Image();
+        img.onload = () => {
+          const dataUrl = imageToResizedJpegDataUrl(img, 720);
+          if (!dataUrl) return;
+          localStorage.setItem(PROFILE_PHOTO_STORAGE_KEY, dataUrl);
+          applyProfilePhotoToPage(dataUrl);
+        };
+        img.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    });
+
+    profilePhotoEditModal?.addEventListener("click", (event) => {
+      event.stopPropagation();
+    });
+
+    profilePhotoEditBackdrop?.addEventListener("click", (event) => {
+      event.stopPropagation();
+      setProfilePhotoEditOpen(false);
+    });
+
+    profilePhotoCropViewport?.addEventListener("pointerdown", (event) => {
+      event.stopPropagation();
+      profilePhotoCropDragId = event.pointerId;
+      profilePhotoCropLastX = event.clientX;
+      profilePhotoCropLastY = event.clientY;
+      profilePhotoCropViewport.setPointerCapture(event.pointerId);
+    });
+
+    profilePhotoCropViewport?.addEventListener("pointermove", (event) => {
+      if (profilePhotoCropDragId !== event.pointerId) return;
+      event.stopPropagation();
+      profilePhotoCropOffsetX += event.clientX - profilePhotoCropLastX;
+      profilePhotoCropOffsetY += event.clientY - profilePhotoCropLastY;
+      profilePhotoCropLastX = event.clientX;
+      profilePhotoCropLastY = event.clientY;
+      clampProfilePhotoCropOffset();
+      syncProfilePhotoCropPreview();
+    });
+
+    const endProfilePhotoCropDrag = (event) => {
+      if (profilePhotoCropDragId !== event.pointerId) return;
+      profilePhotoCropDragId = null;
+      try {
+        profilePhotoCropViewport?.releasePointerCapture(event.pointerId);
+      } catch {
+        /* ignore */
+      }
+    };
+
+    profilePhotoCropViewport?.addEventListener("pointerup", endProfilePhotoCropDrag);
+    profilePhotoCropViewport?.addEventListener("pointercancel", endProfilePhotoCropDrag);
+
+    profilePhotoCropZoomSlider?.addEventListener("input", (event) => {
+      event.stopPropagation();
+      profilePhotoCropZoomValue = parseFloat(profilePhotoCropZoomSlider.value) || 1;
+      clampProfilePhotoCropOffset();
+      syncProfilePhotoCropPreview();
+    });
+
+    profilePhotoEditSave?.addEventListener("click", (event) => {
+      event.stopPropagation();
+      const out = exportCircularProfilePhotoDataUrl();
+      if (!out) return;
+      localStorage.setItem(PROFILE_PHOTO_STORAGE_KEY, out);
+      applyProfilePhotoToPage(out);
+      setProfilePhotoEditOpen(false);
+    });
+
+    profilePhotoEditReset?.addEventListener("click", (event) => {
+      event.stopPropagation();
+      localStorage.removeItem(PROFILE_PHOTO_STORAGE_KEY);
+      applyProfilePhotoToPage(PROFILE_PHOTO_DEFAULT);
+      setProfilePhotoEditOpen(false);
+    });
+
+    profilePhotoEditCancel?.addEventListener("click", (event) => {
+      event.stopPropagation();
+      setProfilePhotoEditOpen(false);
+    });
+
+    panelBackdrop?.addEventListener("click", (event) => {
+      event.stopPropagation();
+      setSidePanelOpen(false);
+    });
+
+    openGroupModal?.addEventListener("click", (event) => {
+      event.stopPropagation();
+      setGroupsMenuOpen(false);
+      setSidePanelOpen(false);
+      setGroupCardOpen(null);
+      setGroupModalOpen(true);
+    });
+
+    groupModal?.addEventListener("click", (event) => {
+      event.stopPropagation();
+    });
+
+    groupModalBackdrop?.addEventListener("click", (event) => {
+      event.stopPropagation();
+      if (isGroupCardOpen()) {
+        setGroupCardOpen(null);
+        setGroupModalOpen(true);
+      } else {
+        setGroupModalOpen(false);
+      }
+    });
+
+    groupModalLeftBtn?.addEventListener("click", () => {
+      if (groupModal) groupModal.dataset.active = "left";
+      createGroupLinkOutput.value = buildGroupLink();
+      if (createGroupNameInput) createGroupNameInput.value = "";
+      setGroupModalOpen(false);
+      setGroupCardOpen("create");
+    });
+
+    groupModalRightBtn?.addEventListener("click", () => {
+      if (groupModal) groupModal.dataset.active = "right";
+      if (joinGroupLinkInput) joinGroupLinkInput.value = "";
+      if (joinGroupStatus) joinGroupStatus.textContent = "";
+      setGroupModalOpen(false);
+      setGroupCardOpen("join");
+    });
+
+    createGroupCard?.addEventListener("click", (event) => {
+      event.stopPropagation();
+    });
+
+    joinGroupCard?.addEventListener("click", (event) => {
+      event.stopPropagation();
+    });
+
+    openFrame19Modal?.addEventListener("click", (event) => {
+      event.stopPropagation();
+      setGroupsMenuOpen(false);
+      setSidePanelOpen(false);
+      setGroupModalOpen(false);
+      setGroupCardOpen(null);
+      setFrame19Mode("offer");
+      clearFrame19Form();
+      setFrame19Open(true);
+    });
+
+    frame19Modal?.addEventListener("click", (event) => {
+      event.stopPropagation();
+    });
+
+    frame19Backdrop?.addEventListener("click", (event) => {
+      event.stopPropagation();
+      setFrame19Open(false);
+    });
+
+    frame19ModeRequest?.addEventListener("click", (event) => {
+      event.stopPropagation();
+      setFrame19Mode("request");
+      navigateToPage("request.html", "transition-to-request", { targetPopup: "frame20", mode: "request" });
+    });
+
+    frame19ModeOffer?.addEventListener("click", (event) => {
+      event.stopPropagation();
+      setFrame19Mode("offer");
+    });
+
+    frame19Submit?.addEventListener("click", (event) => {
+      event.stopPropagation();
+      if (frame19Modal?.dataset.mode !== "offer") return;
+      const time = getOfferDateWheelString();
+      const pointA = document.querySelector(".frame19-input.point-a")?.value?.trim() || "";
+      const pointB = document.querySelector(".frame19-input.point-b")?.value?.trim() || "";
+      const group = getOfferGroupWheelValue();
+      const comments = document.querySelector(".frame19-input.comments")?.value?.trim() || "";
+      const latA = offerRideGeoDraft.pointA?.lat ?? null;
+      const lonA = offerRideGeoDraft.pointA?.lon ?? null;
+      const latB = offerRideGeoDraft.pointB?.lat ?? null;
+      const lonB = offerRideGeoDraft.pointB?.lon ?? null;
+      const entry = {
+        id: `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
+        time,
+        pointA,
+        pointB,
+        group,
+        comments,
+        latA,
+        lonA,
+        latB,
+        lonB,
+        createdAt: Date.now()
+      };
+      const next = [entry, ...loadOfferRides()];
+      saveOfferRides(next);
+      renderOfferRideList();
+      clearFrame19Form();
+      setFrame19Open(false);
+    });
+
+    createGroupCardBtn?.addEventListener("click", () => {
+      const enteredGroupName = createGroupNameInput?.value?.trim() || "";
+      if (!enteredGroupName) return;
+      const newLink = buildGroupLink();
+      createGroupLinkOutput.value = newLink;
+      persistCreatedGroup(enteredGroupName, newLink);
+      renderGroupsMenu();
+      setGroupCardOpen(null);
+      if (groupModal) groupModal.dataset.active = "right";
+    });
+
+    joinGroupCardBtn?.addEventListener("click", () => {
+      const enteredLink = joinGroupLinkInput?.value?.trim() || "";
+      if (!enteredLink) {
+        if (joinGroupStatus) joinGroupStatus.textContent = "Enter a group link to join.";
+        return;
+      }
+      const matchedGroup = findGroupByLink(enteredLink);
+      if (!matchedGroup) {
+        if (joinGroupStatus) joinGroupStatus.textContent = "Link not found. Try a valid group link.";
+        return;
+      }
+      addGroupToCurrentProfile(matchedGroup);
+      renderGroupsMenu();
+      if (joinGroupStatus) joinGroupStatus.textContent = `Joined ${matchedGroup.name}.`;
+      setTimeout(() => setGroupCardOpen(null), 350);
+    });
+
+    const requestLocationAccess = (mode) => {
+      if (!navigator.geolocation) {
+        localStorage.setItem("locationPref", "unsupported");
+        if (locationStatus) locationStatus.textContent = "";
+        setLocationConsentOpen(false);
+        return;
+      }
+
+      if (locationStatus) locationStatus.textContent = "Requesting access...";
+      navigator.geolocation.getCurrentPosition(
+        () => {
+          localStorage.setItem("locationPref", mode === "once" ? "once" : "granted");
+          if (locationStatus) locationStatus.textContent = "";
+          setLocationConsentOpen(false);
+        },
+        () => {
+          localStorage.setItem("locationPref", "denied");
+          if (locationStatus) locationStatus.textContent = "";
+          setLocationConsentOpen(false);
+        },
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+      );
+    };
+
+    locationAllowOnce?.addEventListener("click", () => {
+      requestLocationAccess("once");
+    });
+
+    locationAllowWhile?.addEventListener("click", () => {
+      requestLocationAccess("while");
+    });
+
+    locationDontAllow?.addEventListener("click", () => {
+      localStorage.setItem("locationPref", "denied");
+      if (locationStatus) locationStatus.textContent = "";
+      setLocationConsentOpen(false);
+    });
+
+    leftBtn?.addEventListener("click", () => {
+      split.dataset.active = "left";
+      navigateToPage("request.html", "transition-to-request");
+    });
+
+    rightBtn?.addEventListener("click", () => {
+      split.dataset.active = "right";
+    });
+  </script>
+</body>
+</html>

@@ -1,27 +1,174 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Align — Intro</title>
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <main class="phone phone--intro">
-      <h1 class="logo-gradient logo-gradient--large intro-logo">Align</h1>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Intro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --light-bg: #eceef3;
+      --light-body-text: #1a1f29;
+      --icon-fill: var(--light-body-text);
+      --card-radius: 18px;
+      --frame-radius: 40px;
+      --font-main: Arial, sans-serif;
+      --shadow-frame: 14px 14px 28px rgba(209, 214, 224, 0.7), -14px -14px 28px rgba(255, 255, 255, 0.95);
+      --shadow-card: 8px 8px 16px rgba(200, 206, 217, 0.5), -8px -8px 16px rgba(255, 255, 255, 0.92), inset 1px 1px 0 rgba(255, 255, 255, 0.72);
+    }
 
-      <a
-        class="figma-car figma-car--intro figma-car--link"
-        href="onboarding.html"
-        aria-label="Continue to onboarding"
-      >
-        <div class="figma-car__crop">
-          <img
-            src="https://www.figma.com/api/mcp/asset/b0526839-eb5c-41c2-a5fb-64a1ca03e06a"
-            alt=""
-          />
-        </div>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: var(--light-bg);
+      color: var(--light-body-text);
+      font-family: var(--font-main);
+    }
+
+    .frame {
+      position: relative;
+      width: 402px;
+      height: 874px;
+      border-radius: var(--frame-radius);
+      background: var(--light-bg);
+      box-shadow: var(--shadow-frame);
+      overflow: hidden;
+    }
+
+    .transparent-block {
+      position: absolute;
+      background: transparent;
+      box-shadow: none;
+      border-radius: 0;
+    }
+
+    .box {
+      position: absolute;
+      border: 0;
+      border-radius: var(--card-radius);
+      background: var(--light-bg);
+      box-shadow: var(--shadow-card);
+    }
+
+    #intro1-1 {
+      left: 58px;
+      top: 208px;
+      width: 287px;
+      height: 141px;
+    }
+
+    #intro1-2 {
+      left: 58px;
+      top: 403px;
+      width: 287px;
+      height: 183px;
+    }
+
+    #intro1-3 {
+      left: 92px;
+      top: 233px;
+      width: 218px;
+      height: 140px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    #intro1-4 {
+      left: 137px;
+      top: 733px;
+      width: 148px;
+      height: 66px;
+      display: grid;
+      place-items: center;
+      overflow: visible;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    .icon-screen {
+      position: relative;
+      display: block;
+      width: 100%;
+      height: 100%;
+      border-radius: inherit;
+      overflow: hidden;
+    }
+
+    .icon-screen-fill {
+      position: absolute;
+      inset: 0;
+      background-color: var(--icon-fill);
+      border-radius: inherit;
+      pointer-events: none;
+    }
+
+    .icon-screen-img {
+      position: relative;
+      display: block;
+      width: 100%;
+      height: 100%;
+      border-radius: inherit;
+      mix-blend-mode: screen;
+      pointer-events: none;
+    }
+
+    .car-link .icon-screen-img {
+      object-fit: contain;
+    }
+
+    .car-link {
+      width: 100%;
+      height: 100%;
+      display: block;
+      cursor: pointer;
+    }
+
+    .align-logo {
+      margin: 0;
+      font-family: "Chakra Petch", sans-serif;
+      font-size: 96px;
+      font-weight: 400;
+      line-height: normal;
+      letter-spacing: 0.01em;
+      color: #000;
+      text-align: center;
+      user-select: none;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <div id="intro1-1" class="transparent-block"></div>
+    <div id="intro1-2" class="transparent-block"></div>
+    <div id="intro1-3" class="box">
+      <p class="align-logo">Align</p>
+    </div>
+    <div id="intro1-4" class="box">
+      <a href="onboarding.html" class="car-link" aria-label="Go to onboarding page">
+        <span class="icon-screen">
+          <span class="icon-screen-fill" aria-hidden="true"></span>
+          <img src="Assets/Car.png?v=2" alt="" class="icon-screen-img" />
+        </span>
       </a>
-    </main>
-  </body>
+    </div>
+  </div>
+  <script>
+    const carLink = document.querySelector(".car-link");
+    if (carLink) {
+      carLink.addEventListener("click", (event) => {
+        event.preventDefault();
+        sessionStorage.setItem("carSlideTarget", "onboarding.html");
+        window.location.href = carLink.getAttribute("href") || "onboarding.html";
+      });
+    }
+  </script>
+</body>
 </html>
