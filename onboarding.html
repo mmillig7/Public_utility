@@ -456,18 +456,39 @@
     const joinGroupLinkInput = document.getElementById("joinGroupLinkInput");
     const joinGroupCardBtn = document.getElementById("joinGroupCardBtn");
     const joinGroupStatus = document.getElementById("joinGroupStatus");
-    const carSlideTarget = sessionStorage.getItem("carSlideTarget");
 
     const GROUP_LINK_BASE = "https://public-utility.app/join";
     const PROFILE_NAME_KEY = "publicUtility.profileName";
     const GROUPS_BY_PROFILE_KEY = "publicUtility.groupsByProfile";
+    const STORAGE_KEYS_FULL_RESET = [
+      PROFILE_NAME_KEY,
+      GROUPS_BY_PROFILE_KEY,
+      "publicUtility.profilePhotoDataUrl",
+      "publicUtility.requestRides",
+      "publicUtility.offerRides",
+      "publicUtility.upcomingRides",
+      "publicUtility.popupNavState",
+      "locationPref",
+      "carSlideTarget",
+    ];
+    const clearStoredPrototypeState = () => {
+      try {
+        STORAGE_KEYS_FULL_RESET.forEach((key) => {
+          sessionStorage.removeItem(key);
+          localStorage.removeItem(key);
+        });
+      } catch (_) {
+        /* ignore storage access errors */
+      }
+    };
     const navEntry = performance.getEntriesByType("navigation")[0];
     const isReload = navEntry ? navEntry.type === "reload" : performance.navigation?.type === 1;
 
     if (isReload) {
-      localStorage.removeItem(PROFILE_NAME_KEY);
-      localStorage.removeItem(GROUPS_BY_PROFILE_KEY);
+      clearStoredPrototypeState();
     }
+
+    const carSlideTarget = sessionStorage.getItem("carSlideTarget");
 
     const getRandomToken = (length = 10) => {
       const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789";
@@ -496,28 +517,28 @@
     const getCurrentProfileName = () => {
       const typedName = profileNameInput?.value?.trim();
       if (typedName) return typedName;
-      return localStorage.getItem(PROFILE_NAME_KEY)?.trim() || "Guest";
+      return sessionStorage.getItem(PROFILE_NAME_KEY)?.trim() || "Guest";
     };
 
     const saveProfileName = (name) => {
       const trimmedName = name.trim();
-      localStorage.setItem(PROFILE_NAME_KEY, trimmedName || "Guest");
+      sessionStorage.setItem(PROFILE_NAME_KEY, trimmedName || "Guest");
     };
 
     const persistCreatedGroup = (groupName, link) => {
       const profileName = getCurrentProfileName();
       const profileKey = normalizeProfileKey(profileName);
-      const allGroups = JSON.parse(localStorage.getItem(GROUPS_BY_PROFILE_KEY) || "{}");
+      const allGroups = JSON.parse(sessionStorage.getItem(GROUPS_BY_PROFILE_KEY) || "{}");
       const existingGroups = Array.isArray(allGroups[profileKey]) ? allGroups[profileKey] : [];
       const cleanedGroupName = groupName.trim();
       const entry = { name: cleanedGroupName, link, createdAt: Date.now() };
       const deduped = [entry, ...existingGroups.filter((item) => item.name !== cleanedGroupName)].slice(0, 20);
       allGroups[profileKey] = deduped;
-      localStorage.setItem(GROUPS_BY_PROFILE_KEY, JSON.stringify(allGroups));
+      sessionStorage.setItem(GROUPS_BY_PROFILE_KEY, JSON.stringify(allGroups));
     };
 
     const findGroupByLink = (link) => {
-      const allGroups = JSON.parse(localStorage.getItem(GROUPS_BY_PROFILE_KEY) || "{}");
+      const allGroups = JSON.parse(sessionStorage.getItem(GROUPS_BY_PROFILE_KEY) || "{}");
       const trimmedLink = (link || "").trim();
       const profileKeys = Object.keys(allGroups);
       for (const key of profileKeys) {
@@ -531,14 +552,14 @@
     const addGroupToCurrentProfile = (group) => {
       const profileName = getCurrentProfileName();
       const profileKey = normalizeProfileKey(profileName);
-      const allGroups = JSON.parse(localStorage.getItem(GROUPS_BY_PROFILE_KEY) || "{}");
+      const allGroups = JSON.parse(sessionStorage.getItem(GROUPS_BY_PROFILE_KEY) || "{}");
       const existingGroups = Array.isArray(allGroups[profileKey]) ? allGroups[profileKey] : [];
       const merged = [
         { name: group.name, link: group.link, createdAt: group.createdAt || Date.now() },
         ...existingGroups.filter((item) => item.name !== group.name && item.link !== group.link)
       ].slice(0, 20);
       allGroups[profileKey] = merged;
-      localStorage.setItem(GROUPS_BY_PROFILE_KEY, JSON.stringify(allGroups));
+      sessionStorage.setItem(GROUPS_BY_PROFILE_KEY, JSON.stringify(allGroups));
     };
 
     const POPUP_OPEN_DELAY_MS = 220;
@@ -580,7 +601,7 @@
       });
     }
 
-    const storedProfileName = localStorage.getItem(PROFILE_NAME_KEY);
+    const storedProfileName = sessionStorage.getItem(PROFILE_NAME_KEY);
     if (storedProfileName && profileNameInput) {
       profileNameInput.value = storedProfileName;
     }

@@ -227,7 +227,7 @@
       opacity: 0;
       pointer-events: none;
       transition: opacity 280ms var(--ease-smooth);
-      z-index: 24;
+      z-index: 80;
     }
 
     .group-modal-backdrop {
@@ -290,7 +290,7 @@
       padding: 0;
       z-index: 2;
       color: var(--dark-text-secondary);
-      font-family: inherit;
+      font-family: var(--font-chakra);
       font-size: 12pt;
       text-align: center;
       cursor: pointer;
@@ -459,6 +459,7 @@
     .frame.location-consent-open .location-consent-layer {
       pointer-events: auto;
       opacity: 1;
+      z-index: 20000;
     }
 
     .location-consent-backdrop {
@@ -659,6 +660,75 @@
       opacity: 0.92;
     }
 
+    .upcoming-rides {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 430px;
+      bottom: 18px;
+      padding: 0 16px;
+      box-sizing: border-box;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .upcoming-rides-title {
+      margin: 0;
+      text-align: center;
+      font-family: ui-rounded, "SF Pro Rounded", -apple-system, BlinkMacSystemFont, "Helvetica Neue", system-ui, sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--dark-text-primary);
+    }
+
+    .upcoming-rides-list {
+      flex: 1;
+      overflow: auto;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      scrollbar-width: none;
+    }
+
+    .upcoming-rides-list::-webkit-scrollbar {
+      display: none;
+    }
+
+    .upcoming-ride-item {
+      border-radius: 18px;
+      background: var(--dark-surface);
+      box-shadow: 8px 10px 22px rgba(8, 11, 18, 0.62), -11px -11px 22px rgba(83, 104, 139, 0.32), inset 1px 1px 0 rgba(121, 145, 186, 0.2);
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .upcoming-ride-time {
+      margin: 0;
+      font-family: ui-rounded, "SF Pro Rounded", -apple-system, BlinkMacSystemFont, "Helvetica Neue", system-ui, sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--dark-text-primary);
+    }
+
+    .upcoming-ride-line {
+      margin: 0;
+      font-size: 12px;
+      line-height: 1.3;
+      color: rgba(188, 204, 230, 0.9);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
     .side-panel-close-wrap {
       position: absolute;
       left: 138px;
@@ -755,9 +825,14 @@
       pointer-events: auto;
     }
 
+    .frame.panel-open .side-panel.sidepaneldark {
+      z-index: 1150;
+    }
+
     .frame.panel-open .panel-backdrop {
       opacity: 1;
       pointer-events: auto;
+      z-index: 1140;
     }
 
     #offer1-4 {
@@ -813,26 +888,35 @@
       color: var(--dark-text-primary);
     }
 
-    #offer1-5,
-    #offer1-6,
-    #offer1-7 {
+    #offer1-5 {
       left: 43px;
       width: 318px;
-      height: 144px;
-      padding: 8px 10px;
+      height: auto;
+      padding: 0;
       box-sizing: border-box;
+      overflow-y: auto;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      background: transparent;
+      box-shadow: none;
+      border: 0;
+      scrollbar-width: none;
+    }
+
+    #offer1-5::-webkit-scrollbar {
+      display: none;
     }
 
     #offer1-5 {
       top: 417px;
+      bottom: 18px;
     }
 
-    #offer1-6 {
-      top: 591px;
-    }
-
+    #offer1-6,
     #offer1-7 {
-      top: 765px;
+      display: none;
     }
 
     .ride-summary-card {
@@ -840,8 +924,14 @@
       flex-direction: row;
       align-items: stretch;
       gap: 8px;
-      height: 100%;
+      width: 318px;
+      min-height: 144px;
+      padding: 8px 10px;
       box-sizing: border-box;
+      flex-shrink: 0;
+      border-radius: 18px;
+      background: var(--dark-surface);
+      box-shadow: 8px 8px 16px rgba(10, 13, 20, 0.72), -8px -8px 16px rgba(59, 71, 97, 0.34), inset 1px 1px 0 rgba(66, 82, 107, 0.3);
     }
 
     .ride-summary-text {
@@ -892,14 +982,83 @@
       cursor: pointer;
     }
 
+    .ride-offer-cta-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .ride-offer-group-circle {
+      width: 58px;
+      height: 58px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      background: var(--dark-surface);
+      box-shadow: 8px 8px 16px rgba(10, 13, 20, 0.72), -8px -8px 16px rgba(59, 71, 97, 0.34), inset 1px 1px 0 rgba(66, 82, 107, 0.3);
+    }
+
+    .ride-offer-group-num {
+      font-family: ui-rounded, "SF Pro Rounded", -apple-system, BlinkMacSystemFont, "Helvetica Neue", system-ui, sans-serif;
+      font-size: 22px;
+      font-weight: 600;
+      line-height: 1;
+      letter-spacing: -0.03em;
+      color: var(--dark-text-primary);
+    }
+
+    .ride-offer-join-btn {
+      width: 112px;
+      border: 0;
+      border-radius: 16px;
+      padding: 9px 10px;
+      margin: 0;
+      cursor: pointer;
+      font-family: var(--font-chakra);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--dark-text-primary);
+      background: var(--dark-surface);
+      box-shadow: 8px 8px 16px rgba(10, 13, 20, 0.72), -8px -8px 16px rgba(59, 71, 97, 0.34), inset 1px 1px 0 rgba(66, 82, 107, 0.3);
+      -webkit-tap-highlight-color: transparent;
+      transition: opacity var(--dur-fast) var(--ease-smooth), transform 90ms ease;
+      align-self: center;
+    }
+
+    .ride-offer-join-btn:hover {
+      opacity: 0.92;
+    }
+
+    .ride-offer-join-btn:active {
+      transform: scale(0.97);
+    }
+
+    .frame.frame19-open .ride-summary-map,
+    .frame.group-modal-open .ride-summary-map,
+    .frame.group-card-open .ride-summary-map,
+    .frame.panel-open .ride-summary-map,
+    .frame.location-consent-open .ride-summary-map,
+    .frame.profile-photo-edit-open .ride-summary-map {
+      visibility: hidden;
+      pointer-events: none;
+    }
+
     #offer1-8 {
-      left: 265px;
-      top: 736px;
+      left: auto;
+      top: auto;
+      right: 17px;
+      bottom: 18px;
       width: 120px;
       height: 120px;
       border-radius: 100px;
       overflow: hidden;
       display: block;
+      z-index: 1100;
     }
 
     .circle-car {
@@ -921,7 +1080,7 @@
       opacity: 0;
       pointer-events: none;
       transition: opacity var(--dur-fast) var(--ease-smooth);
-      z-index: 1000;
+      z-index: 1180;
     }
 
     .frame19-modal {
@@ -929,7 +1088,7 @@
       left: 50%;
       top: 50%;
       width: 297px;
-      height: 640px;
+      height: 760px;
       border-radius: 30px;
       background: #1a1f29;
       box-shadow: var(--shadow-group-join-popup);
@@ -937,7 +1096,7 @@
       opacity: 0;
       pointer-events: none;
       transition: opacity var(--dur-fast) var(--ease-smooth), transform var(--dur-fast) var(--ease-smooth);
-      z-index: 1001;
+      z-index: 1190;
       overflow: hidden;
       font-family: ui-rounded, "SF Pro Rounded", -apple-system, BlinkMacSystemFont, "Helvetica Neue", system-ui, sans-serif;
     }
@@ -1057,13 +1216,33 @@
     }
 
     .frame19-label.time { left: 106px; top: 95px; width: 85px; }
-    .frame19-label.point-a { left: 118px; top: 229px; width: 64px; }
-    .frame19-label.point-b { left: 115px; top: 317px; width: 64px; }
-    .frame19-label.group { left: 101px; top: 405px; width: 94px; }
-    .frame19-label.comments { left: 95px; top: 493px; width: 106px; }
+    .frame19-label.time { left: 106px; top: 95px; width: 85px; }
+    .frame19-label.time-of-day { left: 112px; top: 229px; width: 74px; }
+    .frame19-label.point-a { left: 118px; top: 361px; width: 64px; }
+    .frame19-label.point-b { left: 115px; top: 449px; width: 64px; }
+    .frame19-label.group { left: 101px; top: 537px; width: 94px; }
 
     .frame19-modal[data-mode="request"] .frame19-label {
       color: var(--light-body-text);
+    }
+
+    .frame19-label.time,
+    .frame19-label.time-of-day,
+    .frame19-label.point-a,
+    .frame19-label.point-b {
+      display: none;
+    }
+
+    .frame19-input.point-a::placeholder,
+    .frame19-input.point-b::placeholder {
+      color: rgba(214, 223, 238, 0.74);
+      opacity: 1;
+    }
+
+    .frame19-modal[data-mode="request"] .frame19-input.point-a::placeholder,
+    .frame19-modal[data-mode="request"] .frame19-input.point-b::placeholder {
+      color: rgba(56, 66, 86, 0.72);
+      opacity: 1;
     }
 
     .frame19-input {
@@ -1202,6 +1381,115 @@
       background: linear-gradient(to top, #cfd6e6, rgba(207, 214, 230, 0));
     }
 
+    .frame19-time-wheel {
+      position: absolute;
+      left: 42px;
+      top: 267px;
+      width: 212px;
+      height: 84px;
+      border-radius: 12px;
+      background: #1c2433;
+      box-shadow:
+        6px 6px 12px rgba(5, 8, 14, 0.62),
+        -4px -4px 10px rgba(59, 71, 97, 0.28),
+        inset 1px 1px 0 rgba(80, 98, 126, 0.28);
+      overflow: hidden;
+      z-index: 9;
+    }
+
+    .frame19-modal[data-mode="request"] .frame19-time-wheel {
+      background: #cfd6e6;
+      box-shadow:
+        6px 6px 12px rgba(185, 192, 206, 0.48),
+        -5px -5px 12px rgba(255, 255, 255, 0.78),
+        inset 1px 1px 0 rgba(255, 255, 255, 0.55);
+    }
+
+    .frame19-time-wheel-highlight {
+      position: absolute;
+      left: 8px;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      height: 32px;
+      border-radius: 8px;
+      background: rgba(235, 242, 252, 0.06);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .frame19-modal[data-mode="request"] .frame19-time-wheel-highlight {
+      background: rgba(120, 132, 158, 0.14);
+    }
+
+    .frame19-time-wheel-cols {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      height: 84px;
+    }
+
+    .frame19-time-wheel-col {
+      position: relative;
+      flex: 1;
+      min-width: 0;
+      height: 84px;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      scroll-snap-type: y mandatory;
+      padding-top: 26px;
+      padding-bottom: 26px;
+      box-sizing: border-box;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .frame19-time-wheel-col::-webkit-scrollbar {
+      display: none;
+    }
+
+    .frame19-time-wheel-item {
+      height: 32px;
+      line-height: 32px;
+      text-align: center;
+      font-size: 13px;
+      letter-spacing: 0.01em;
+      color: var(--dark-text-primary);
+      scroll-snap-align: center;
+      white-space: nowrap;
+    }
+
+    .frame19-modal[data-mode="request"] .frame19-time-wheel-item {
+      color: var(--light-body-text);
+    }
+
+    .frame19-time-wheel-fade {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 22px;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .frame19-time-wheel-fade--top {
+      top: 0;
+      background: linear-gradient(to bottom, #1c2433, rgba(28, 36, 51, 0));
+    }
+
+    .frame19-time-wheel-fade--bottom {
+      bottom: 0;
+      background: linear-gradient(to top, #1c2433, rgba(28, 36, 51, 0));
+    }
+
+    .frame19-modal[data-mode="request"] .frame19-time-wheel-fade--top {
+      background: linear-gradient(to bottom, #cfd6e6, rgba(207, 214, 230, 0));
+    }
+
+    .frame19-modal[data-mode="request"] .frame19-time-wheel-fade--bottom {
+      background: linear-gradient(to top, #cfd6e6, rgba(207, 214, 230, 0));
+    }
+
     .ride-input-wrap {
       position: absolute;
       left: 42px;
@@ -1210,11 +1498,11 @@
     }
 
     .ride-input-wrap.point-a-wrap {
-      top: 273px;
+      top: 405px;
     }
 
     .ride-input-wrap.point-b-wrap {
-      top: 361px;
+      top: 474px;
     }
 
     .ride-input-wrap .frame19-input {
@@ -1279,7 +1567,7 @@
     .frame19-group-wheel {
       position: absolute;
       left: 42px;
-      top: 443px;
+      top: 575px;
       width: 212px;
       height: 84px;
       border-radius: 12px;
@@ -1377,10 +1665,6 @@
       background: linear-gradient(to top, #cfd6e6, rgba(207, 214, 230, 0));
     }
 
-    .frame19-input.comments {
-      top: 537px;
-    }
-
     .frame19-modal .frame19-label,
     .frame19-modal .frame19-input,
     .frame19-modal .frame19-submit,
@@ -1391,7 +1675,7 @@
     .frame19-submit {
       position: absolute;
       left: 89px;
-      top: 588px;
+      top: 676px;
       width: 116px;
       height: 27px;
       border: 0;
@@ -1634,6 +1918,17 @@
           <div class="frame19-date-wheel-col" data-date-wheel="year" tabindex="0"></div>
         </div>
       </div>
+      <p class="frame19-label time-of-day">Time</p>
+      <div id="frame19TimeWheel" class="frame19-time-wheel" role="group" aria-label="Ride time">
+        <div class="frame19-time-wheel-highlight" aria-hidden="true"></div>
+        <div class="frame19-time-wheel-fade frame19-time-wheel-fade--top" aria-hidden="true"></div>
+        <div class="frame19-time-wheel-fade frame19-time-wheel-fade--bottom" aria-hidden="true"></div>
+        <div class="frame19-time-wheel-cols">
+          <div class="frame19-time-wheel-col" data-time-wheel="hour" tabindex="0"></div>
+          <div class="frame19-time-wheel-col" data-time-wheel="minute" tabindex="0"></div>
+          <div class="frame19-time-wheel-col" data-time-wheel="meridiem" tabindex="0"></div>
+        </div>
+      </div>
       <p class="frame19-label point-a">Point A</p>
       <div class="ride-input-wrap point-a-wrap">
         <input class="frame19-input point-a" type="text" autocomplete="off" placeholder="Start address" />
@@ -1651,8 +1946,6 @@
         <div class="frame19-group-wheel-fade frame19-group-wheel-fade--bottom" aria-hidden="true"></div>
         <div class="frame19-group-wheel-col" data-group-wheel="count" tabindex="0"></div>
       </div>
-      <p id="frame19LabelComments" class="frame19-label comments">Comments:</p>
-      <input class="frame19-input comments" type="text" autocomplete="off" />
       <button id="frame19Submit" class="frame19-submit" type="button">Offer Ride</button>
     </section>
     <div id="groupModalBackdrop" class="group-modal-backdrop" aria-hidden="true"></div>
@@ -1675,7 +1968,7 @@
       <button id="joinGroupCardBtn" class="card-btn join-card-btn" type="button">Join</button>
     </section>
     <div class="panel-backdrop" id="panelBackdrop" aria-hidden="true"></div>
-    <aside class="side-panel" aria-hidden="true" id="sidePanel">
+    <aside class="side-panel sidepaneldark" aria-hidden="true" id="sidePanel">
       <div class="side-panel-main-stack">
         <div class="side-panel-item name" id="sidePanelName">Guest</div>
         <div
@@ -1698,6 +1991,10 @@
           <img src="Assets/notification.png?v=2" alt="" class="side-panel-notif-icon" id="sidePanelNotifIcon" width="55" height="51" />
         </div>
       </div>
+      <section class="upcoming-rides" aria-label="Upcoming rides">
+        <p class="upcoming-rides-title">Upcoming rides</p>
+        <ul class="upcoming-rides-list" id="upcomingRidesList"></ul>
+      </section>
       <div class="side-panel-close-wrap">
         <button
           type="button"
@@ -1831,20 +2128,40 @@
     const frame19Submit = document.getElementById("frame19Submit");
     const frame19LabelTime = document.getElementById("frame19LabelTime");
     const frame19LabelGroup = document.getElementById("frame19LabelGroup");
-    const frame19LabelComments = document.getElementById("frame19LabelComments");
     const split = document.getElementById("offer1-4");
     const sidePanelName = document.getElementById("sidePanelName");
+    const upcomingRidesList = document.getElementById("upcomingRidesList");
     const PROFILE_NAME_KEY = "publicUtility.profileName";
     const GROUPS_BY_PROFILE_KEY = "publicUtility.groupsByProfile";
     const PROFILE_PHOTO_STORAGE_KEY = "publicUtility.profilePhotoDataUrl";
     const PROFILE_PHOTO_DEFAULT = "Assets/profile-dark.png";
     const PROFILE_CROP_VIEWPORT_PX = 260;
+    const STORAGE_KEYS_FULL_RESET = [
+      PROFILE_NAME_KEY,
+      GROUPS_BY_PROFILE_KEY,
+      PROFILE_PHOTO_STORAGE_KEY,
+      "publicUtility.requestRides",
+      "publicUtility.offerRides",
+      "publicUtility.upcomingRides",
+      "publicUtility.popupNavState",
+      "locationPref",
+      "carSlideTarget",
+    ];
+    const clearStoredPrototypeState = () => {
+      try {
+        STORAGE_KEYS_FULL_RESET.forEach((key) => {
+          sessionStorage.removeItem(key);
+          localStorage.removeItem(key);
+        });
+      } catch (_) {
+        /* ignore storage access errors */
+      }
+    };
     const navEntry = performance.getEntriesByType("navigation")[0];
     const isReload = navEntry ? navEntry.type === "reload" : performance.navigation?.type === 1;
 
     if (isReload) {
-      localStorage.removeItem(PROFILE_NAME_KEY);
-      localStorage.removeItem(GROUPS_BY_PROFILE_KEY);
+      clearStoredPrototypeState();
     }
     if (!split) throw new Error("Missing offer slider container");
 
@@ -1854,7 +2171,7 @@
     const groupModalRightBtn = groupModal?.querySelector(".group-modal-hit.right");
     const normalizeProfileKey = (name) => (name || "Guest").trim().toLowerCase();
 
-    const getCurrentProfileName = () => localStorage.getItem(PROFILE_NAME_KEY)?.trim() || "Guest";
+    const getCurrentProfileName = () => sessionStorage.getItem(PROFILE_NAME_KEY)?.trim() || "Guest";
     const GROUP_LINK_BASE = "https://public-utility.app/join";
 
     let profilePhotoEditBaseImage = null;
@@ -1867,7 +2184,7 @@
     let profilePhotoCropLastY = 0;
 
     const applyProfilePhotoToPage = (src) => {
-      const url = src ?? localStorage.getItem(PROFILE_PHOTO_STORAGE_KEY) ?? PROFILE_PHOTO_DEFAULT;
+      const url = src ?? sessionStorage.getItem(PROFILE_PHOTO_STORAGE_KEY) ?? PROFILE_PHOTO_DEFAULT;
       document.querySelectorAll("img.profile-image").forEach((el) => {
         el.src = url;
       });
@@ -1942,7 +2259,7 @@
     };
 
     const openProfilePhotoEditor = () => {
-      const src = localStorage.getItem(PROFILE_PHOTO_STORAGE_KEY) || PROFILE_PHOTO_DEFAULT;
+      const src = sessionStorage.getItem(PROFILE_PHOTO_STORAGE_KEY) || PROFILE_PHOTO_DEFAULT;
       profilePhotoCropOffsetX = 0;
       profilePhotoCropOffsetY = 0;
       profilePhotoCropZoomValue = 1;
@@ -1986,17 +2303,17 @@
     const persistCreatedGroup = (groupName, link) => {
       const profileName = getCurrentProfileName();
       const profileKey = normalizeProfileKey(profileName);
-      const allGroups = JSON.parse(localStorage.getItem(GROUPS_BY_PROFILE_KEY) || "{}");
+      const allGroups = JSON.parse(sessionStorage.getItem(GROUPS_BY_PROFILE_KEY) || "{}");
       const existingGroups = Array.isArray(allGroups[profileKey]) ? allGroups[profileKey] : [];
       const cleanedGroupName = groupName.trim();
       const entry = { name: cleanedGroupName, link, createdAt: Date.now() };
       const deduped = [entry, ...existingGroups.filter((item) => item.name !== cleanedGroupName)].slice(0, 20);
       allGroups[profileKey] = deduped;
-      localStorage.setItem(GROUPS_BY_PROFILE_KEY, JSON.stringify(allGroups));
+      sessionStorage.setItem(GROUPS_BY_PROFILE_KEY, JSON.stringify(allGroups));
     };
 
     const findGroupByLink = (link) => {
-      const allGroups = JSON.parse(localStorage.getItem(GROUPS_BY_PROFILE_KEY) || "{}");
+      const allGroups = JSON.parse(sessionStorage.getItem(GROUPS_BY_PROFILE_KEY) || "{}");
       const trimmedLink = (link || "").trim();
       const profileKeys = Object.keys(allGroups);
       for (const key of profileKeys) {
@@ -2010,20 +2327,20 @@
     const addGroupToCurrentProfile = (group) => {
       const profileName = getCurrentProfileName();
       const profileKey = normalizeProfileKey(profileName);
-      const allGroups = JSON.parse(localStorage.getItem(GROUPS_BY_PROFILE_KEY) || "{}");
+      const allGroups = JSON.parse(sessionStorage.getItem(GROUPS_BY_PROFILE_KEY) || "{}");
       const existingGroups = Array.isArray(allGroups[profileKey]) ? allGroups[profileKey] : [];
       const merged = [
         { name: group.name, link: group.link, createdAt: group.createdAt || Date.now() },
         ...existingGroups.filter((item) => item.name !== group.name && item.link !== group.link)
       ].slice(0, 20);
       allGroups[profileKey] = merged;
-      localStorage.setItem(GROUPS_BY_PROFILE_KEY, JSON.stringify(allGroups));
+      sessionStorage.setItem(GROUPS_BY_PROFILE_KEY, JSON.stringify(allGroups));
     };
 
     const renderGroupsMenu = () => {
       if (!groupsMenu) return;
       const profileName = getCurrentProfileName();
-      const allGroups = JSON.parse(localStorage.getItem(GROUPS_BY_PROFILE_KEY) || "{}");
+      const allGroups = JSON.parse(sessionStorage.getItem(GROUPS_BY_PROFILE_KEY) || "{}");
       const groupsForProfile = allGroups[normalizeProfileKey(profileName)] || [];
       groupsMenu.innerHTML = "";
 
@@ -2117,7 +2434,6 @@
       const nextMode = mode === "request" ? "request" : "offer";
       frame19Modal.dataset.mode = nextMode;
       if (frame19LabelTime) frame19LabelTime.textContent = "Date";
-      if (frame19LabelComments) frame19LabelComments.textContent = "Comments:";
       if (frame19LabelGroup) {
         frame19LabelGroup.textContent = nextMode === "request" ? "# in Group" : "# of seats in car";
       }
@@ -2128,7 +2444,8 @@
     };
 
     const OFFER_RIDES_KEY = "publicUtility.offerRides";
-    const OFFER_RIDE_SLOT_IDS = ["offer1-5", "offer1-6", "offer1-7"];
+    const OFFER_RIDE_LIST_ID = "offer1-5";
+    const UPCOMING_RIDES_KEY = "publicUtility.upcomingRides";
     const PHOTON_SEARCH_OFFER = "https://photon.komoot.io/api/";
     let offerRideGeoDraft = { pointA: null, pointB: null };
     let offerRideSuggestTimers = { a: null, b: null };
@@ -2149,6 +2466,63 @@
         }
       });
       offerRideListMaps = [];
+    };
+
+    const loadUpcomingRides = () => {
+      try {
+        const raw = sessionStorage.getItem(UPCOMING_RIDES_KEY);
+        const parsed = raw ? JSON.parse(raw) : [];
+        return Array.isArray(parsed) ? parsed : [];
+      } catch {
+        return [];
+      }
+    };
+
+    const persistUpcomingRides = (rides) => {
+      try {
+        sessionStorage.setItem(UPCOMING_RIDES_KEY, JSON.stringify(rides.slice(0, 20)));
+      } catch {
+        /* ignore */
+      }
+    };
+
+    const saveUpcomingRide = (ride) => {
+      const safe = {
+        id: `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
+        kind: ride?.kind === "request" ? "request" : "offer",
+        time: String(ride?.time || ""),
+        pointA: String(ride?.pointA || ""),
+        pointB: String(ride?.pointB || ""),
+        group: String(ride?.group || ""),
+        createdAt: Date.now()
+      };
+      const existing = loadUpcomingRides();
+      const next = [safe, ...existing.filter((x) => x.time !== safe.time || x.pointA !== safe.pointA || x.pointB !== safe.pointB)].slice(0, 20);
+      persistUpcomingRides(next);
+      renderUpcomingRides();
+    };
+
+    const renderUpcomingRides = () => {
+      if (!upcomingRidesList) return;
+      const rides = loadUpcomingRides();
+      upcomingRidesList.innerHTML = "";
+      for (const ride of rides) {
+        const li = document.createElement("li");
+        li.className = "upcoming-ride-item";
+        const t = document.createElement("p");
+        t.className = "upcoming-ride-time";
+        t.textContent = ride.time?.trim() || "Ride";
+        const a = document.createElement("p");
+        a.className = "upcoming-ride-line";
+        a.textContent = ride.pointA ? `From: ${ride.pointA}` : "";
+        const b = document.createElement("p");
+        b.className = "upcoming-ride-line";
+        b.textContent = ride.pointB ? `To: ${ride.pointB}` : "";
+        li.append(t);
+        if (a.textContent) li.append(a);
+        if (b.textContent) li.append(b);
+        upcomingRidesList.appendChild(li);
+      }
     };
 
     const getMapKitReadyPromiseOffer = () => {
@@ -2254,7 +2628,11 @@
     };
 
     const OFFER_DATE_WHEEL_ITEM_H = 32;
+    const OFFER_TIME_WHEEL_ITEM_H = 32;
     const OFFER_MONTH_NAMES_SHORT = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const OFFER_TIME_HOURS = Array.from({ length: 12 }, (_, h) => String(h + 1).padStart(2, "0"));
+    const OFFER_TIME_MINUTES = Array.from({ length: 60 }, (_, m) => String(m).padStart(2, "0"));
+    const OFFER_TIME_MERIDIEM = ["AM", "PM"];
 
     const daysInMonthOffer = (year, monthIndex) => new Date(year, monthIndex + 1, 0).getDate();
 
@@ -2268,6 +2646,9 @@
     let offerDateWheelState = { y: new Date().getFullYear(), m: new Date().getMonth(), d: new Date().getDate() };
     let offerDateWheelIgnoreScroll = false;
     let offerDateWheelWired = false;
+    let offerTimeWheelState = { hour: 7, minute: 0, meridiem: 0 };
+    let offerTimeWheelIgnoreScroll = false;
+    let offerTimeWheelWired = false;
 
     const getOfferDateWheelEls = () => {
       const root = document.getElementById("frame19DateWheel");
@@ -2412,7 +2793,100 @@
       syncOfferDateWheelScrollPositions();
     };
 
-    const getOfferDateWheelString = () => formatOfferPickedDate();
+    const getOfferTimeWheelEls = () => {
+      const root = document.getElementById("frame19TimeWheel");
+      if (!root) return null;
+      return {
+        hour: root.querySelector('[data-time-wheel="hour"]'),
+        minute: root.querySelector('[data-time-wheel="minute"]'),
+        meridiem: root.querySelector('[data-time-wheel="meridiem"]')
+      };
+    };
+
+    const setOfferTimeWheelScroll = (el, index, maxIndex) => {
+      const i = Math.max(0, Math.min(maxIndex, index));
+      offerTimeWheelIgnoreScroll = true;
+      el.scrollTo({ top: i * OFFER_TIME_WHEEL_ITEM_H, behavior: "instant" });
+      requestAnimationFrame(() => {
+        offerTimeWheelIgnoreScroll = false;
+      });
+    };
+
+    const syncOfferTimeWheel = () => {
+      const els = getOfferTimeWheelEls();
+      if (!els?.hour || !els.minute || !els.meridiem) return;
+      offerTimeWheelState.hour = Math.max(0, Math.min(11, offerTimeWheelState.hour));
+      offerTimeWheelState.minute = Math.max(0, Math.min(59, offerTimeWheelState.minute));
+      offerTimeWheelState.meridiem = Math.max(0, Math.min(1, offerTimeWheelState.meridiem));
+      els.hour.innerHTML = "";
+      OFFER_TIME_HOURS.forEach((value) => {
+        const row = document.createElement("div");
+        row.className = "frame19-time-wheel-item";
+        row.textContent = value;
+        els.hour.appendChild(row);
+      });
+      els.minute.innerHTML = "";
+      OFFER_TIME_MINUTES.forEach((value) => {
+        const row = document.createElement("div");
+        row.className = "frame19-time-wheel-item";
+        row.textContent = value;
+        els.minute.appendChild(row);
+      });
+      els.meridiem.innerHTML = "";
+      OFFER_TIME_MERIDIEM.forEach((value) => {
+        const row = document.createElement("div");
+        row.className = "frame19-time-wheel-item";
+        row.textContent = value;
+        els.meridiem.appendChild(row);
+      });
+      setOfferTimeWheelScroll(els.hour, offerTimeWheelState.hour, 11);
+      setOfferTimeWheelScroll(els.minute, offerTimeWheelState.minute, 59);
+      setOfferTimeWheelScroll(els.meridiem, offerTimeWheelState.meridiem, 1);
+    };
+
+    const wireOfferTimeWheel = () => {
+      if (offerTimeWheelWired) return;
+      const els = getOfferTimeWheelEls();
+      if (!els?.hour || !els.minute || !els.meridiem) return;
+      offerTimeWheelWired = true;
+      syncOfferTimeWheel();
+      const bind = (col, maxIdx, key) => {
+        let t = null;
+        col.addEventListener(
+          "scroll",
+          () => {
+            if (offerTimeWheelIgnoreScroll) return;
+            if (t) window.clearTimeout(t);
+            t = window.setTimeout(() => {
+              let idx = Math.round(col.scrollTop / OFFER_TIME_WHEEL_ITEM_H);
+              idx = Math.max(0, Math.min(maxIdx, idx));
+              if (Math.abs(col.scrollTop - idx * OFFER_TIME_WHEEL_ITEM_H) > 0.5) {
+                setOfferTimeWheelScroll(col, idx, maxIdx);
+              }
+              offerTimeWheelState[key] = idx;
+            }, 45);
+          },
+          { passive: true }
+        );
+      };
+      bind(els.hour, 11, "hour");
+      bind(els.minute, 59, "minute");
+      bind(els.meridiem, 1, "meridiem");
+    };
+
+    const getOfferDateWheelString = () => {
+      const date = formatOfferPickedDate();
+      const hh = OFFER_TIME_HOURS[offerTimeWheelState.hour] || "00";
+      const mm = OFFER_TIME_MINUTES[offerTimeWheelState.minute] || "00";
+      const meridiem = OFFER_TIME_MERIDIEM[offerTimeWheelState.meridiem] || "AM";
+      const time = `${hh}:${mm} ${meridiem}`;
+      return `${date} • ${time}`;
+    };
+
+    const resetOfferTimeWheel = () => {
+      offerTimeWheelState = { hour: 7, minute: 0, meridiem: 0 };
+      syncOfferTimeWheel();
+    };
 
     const offerGroupWheelMaxForMode = () => (frame19Modal?.dataset.mode === "request" ? 30 : 8);
 
@@ -2479,12 +2953,12 @@
 
     const clearFrame19Form = () => {
       resetOfferDateWheel();
+      resetOfferTimeWheel();
       resetOfferGroupWheel();
       const pa = document.querySelector(".frame19-input.point-a");
       const pb = document.querySelector(".frame19-input.point-b");
       if (pa) pa.value = "";
       if (pb) pb.value = "";
-      document.querySelector(".frame19-input.comments") && (document.querySelector(".frame19-input.comments").value = "");
       offerRideGeoDraft = { pointA: null, pointB: null };
       hideOfferSuggest("a");
       hideOfferSuggest("b");
@@ -2492,7 +2966,7 @@
 
     const loadOfferRides = () => {
       try {
-        const raw = localStorage.getItem(OFFER_RIDES_KEY);
+        const raw = sessionStorage.getItem(OFFER_RIDES_KEY);
         const arr = JSON.parse(raw || "[]");
         return Array.isArray(arr) ? arr : [];
       } catch {
@@ -2501,7 +2975,7 @@
     };
 
     const saveOfferRides = (rides) => {
-      localStorage.setItem(OFFER_RIDES_KEY, JSON.stringify(rides.slice(0, 40)));
+      sessionStorage.setItem(OFFER_RIDES_KEY, JSON.stringify(rides.slice(0, 40)));
     };
 
     const buildAppleMapsDirectionsUrlOffer = (latA, lonA, latB, lonB) => {
@@ -2671,15 +3145,12 @@
     const renderOfferRideList = async () => {
       destroyOfferRideMaps();
       const rides = loadOfferRides()
-        .sort((x, y) => (y.createdAt || 0) - (x.createdAt || 0))
-        .slice(0, 3);
-      for (let index = 0; index < OFFER_RIDE_SLOT_IDS.length; index += 1) {
-        const slotId = OFFER_RIDE_SLOT_IDS[index];
-        const slot = document.getElementById(slotId);
-        if (!slot) continue;
-        slot.innerHTML = "";
+        .sort((x, y) => (y.createdAt || 0) - (x.createdAt || 0));
+      const slot = document.getElementById(OFFER_RIDE_LIST_ID);
+      if (!slot) return;
+      slot.innerHTML = "";
+      for (let index = 0; index < rides.length; index += 1) {
         const ride = rides[index];
-        if (!ride) continue;
         const card = document.createElement("div");
         card.className = "ride-summary-card";
         const text = document.createElement("div");
@@ -2693,13 +3164,53 @@
         const r2 = document.createElement("p");
         r2.className = "ride-line";
         r2.textContent = ride.pointB ? `B: ${ride.pointB}` : "";
-        const g = document.createElement("p");
-        g.className = "ride-line";
-        g.textContent = ride.group ? String(ride.group) : "";
-        const c = document.createElement("p");
-        c.className = "ride-line";
-        c.textContent = ride.comments ? ride.comments : "";
-        text.append(h, r1, r2, g, c);
+        text.append(h);
+        if (r1.textContent) text.appendChild(r1);
+        if (r2.textContent) text.appendChild(r2);
+
+        const groupDisplay =
+          ride.group != null && String(ride.group).trim() !== ""
+            ? String(ride.group).trim()
+            : "–";
+        const ctaWrap = document.createElement("div");
+        ctaWrap.className = "ride-offer-cta-wrap";
+
+        // Circle badge (mirrors the style of the car-circle)
+        const circle = document.createElement("div");
+        circle.className = "ride-offer-group-circle";
+        const num = document.createElement("span");
+        num.className = "ride-offer-group-num";
+        num.textContent = groupDisplay;
+        circle.appendChild(num);
+
+        // Join button centered on the left column
+        const joinBtn = document.createElement("button");
+        joinBtn.type = "button";
+        joinBtn.className = "ride-offer-join-btn";
+        joinBtn.textContent = "Join";
+        joinBtn.setAttribute("aria-label", "Join this offer");
+        joinBtn.addEventListener("click", (event) => {
+          event.stopPropagation();
+          event.preventDefault();
+          saveUpcomingRide({
+            kind: "offer",
+            time: ride.time || "",
+            pointA: ride.pointA || "",
+            pointB: ride.pointB || "",
+            group: ride.group || ""
+          });
+          try {
+            const remaining = loadOfferRides().filter((x) => (ride.id ? x.id !== ride.id : true));
+            if (ride.id) saveOfferRides(remaining);
+          } catch {
+            /* ignore */
+          }
+          renderOfferRideList();
+        });
+
+        ctaWrap.append(circle, joinBtn);
+        text.appendChild(ctaWrap);
+
         const mapEl = document.createElement("div");
         mapEl.className = "ride-summary-map";
         mapEl.id = `offerRideMap-${index}`;
@@ -2712,6 +3223,7 @@
     wireOfferAddressInput("a");
     wireOfferAddressInput("b");
     wireOfferDateWheel();
+    wireOfferTimeWheel();
     wireOfferGroupWheel();
 
     const POPUP_NAV_STATE_KEY = "publicUtility.popupNavState";
@@ -2756,6 +3268,7 @@
 
     restorePopupNavState();
     renderOfferRideList();
+    renderUpcomingRides();
 
     const isGroupCardOpen = () =>
       Boolean(frame?.classList.contains("group-card-open") && (createGroupCard?.classList.contains("visible") || joinGroupCard?.classList.contains("visible")));
@@ -2895,7 +3408,7 @@
         img.onload = () => {
           const dataUrl = imageToResizedJpegDataUrl(img, 720);
           if (!dataUrl) return;
-          localStorage.setItem(PROFILE_PHOTO_STORAGE_KEY, dataUrl);
+          sessionStorage.setItem(PROFILE_PHOTO_STORAGE_KEY, dataUrl);
           applyProfilePhotoToPage(dataUrl);
         };
         img.src = reader.result;
@@ -2955,14 +3468,14 @@
       event.stopPropagation();
       const out = exportCircularProfilePhotoDataUrl();
       if (!out) return;
-      localStorage.setItem(PROFILE_PHOTO_STORAGE_KEY, out);
+      sessionStorage.setItem(PROFILE_PHOTO_STORAGE_KEY, out);
       applyProfilePhotoToPage(out);
       setProfilePhotoEditOpen(false);
     });
 
     profilePhotoEditReset?.addEventListener("click", (event) => {
       event.stopPropagation();
-      localStorage.removeItem(PROFILE_PHOTO_STORAGE_KEY);
+      sessionStorage.removeItem(PROFILE_PHOTO_STORAGE_KEY);
       applyProfilePhotoToPage(PROFILE_PHOTO_DEFAULT);
       setProfilePhotoEditOpen(false);
     });
@@ -3061,7 +3574,7 @@
       const pointA = document.querySelector(".frame19-input.point-a")?.value?.trim() || "";
       const pointB = document.querySelector(".frame19-input.point-b")?.value?.trim() || "";
       const group = getOfferGroupWheelValue();
-      const comments = document.querySelector(".frame19-input.comments")?.value?.trim() || "";
+      const comments = "";
       const latA = offerRideGeoDraft.pointA?.lat ?? null;
       const lonA = offerRideGeoDraft.pointA?.lon ?? null;
       const latB = offerRideGeoDraft.pointB?.lat ?? null;
@@ -3116,7 +3629,7 @@
 
     const requestLocationAccess = (mode) => {
       if (!navigator.geolocation) {
-        localStorage.setItem("locationPref", "unsupported");
+        sessionStorage.setItem("locationPref", "unsupported");
         if (locationStatus) locationStatus.textContent = "";
         setLocationConsentOpen(false);
         return;
@@ -3125,12 +3638,12 @@
       if (locationStatus) locationStatus.textContent = "Requesting access...";
       navigator.geolocation.getCurrentPosition(
         () => {
-          localStorage.setItem("locationPref", mode === "once" ? "once" : "granted");
+          sessionStorage.setItem("locationPref", mode === "once" ? "once" : "granted");
           if (locationStatus) locationStatus.textContent = "";
           setLocationConsentOpen(false);
         },
         () => {
-          localStorage.setItem("locationPref", "denied");
+          sessionStorage.setItem("locationPref", "denied");
           if (locationStatus) locationStatus.textContent = "";
           setLocationConsentOpen(false);
         },
@@ -3147,7 +3660,7 @@
     });
 
     locationDontAllow?.addEventListener("click", () => {
-      localStorage.setItem("locationPref", "denied");
+      sessionStorage.setItem("locationPref", "denied");
       if (locationStatus) locationStatus.textContent = "";
       setLocationConsentOpen(false);
     });
