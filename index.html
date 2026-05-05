@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Intro</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -17,43 +17,41 @@
       --font-main: Arial, sans-serif;
       --shadow-frame: 14px 14px 28px rgba(209, 214, 224, 0.7), -14px -14px 28px rgba(255, 255, 255, 0.95);
       --shadow-card: 8px 8px 16px rgba(200, 206, 217, 0.5), -8px -8px 16px rgba(255, 255, 255, 0.92), inset 1px 1px 0 rgba(255, 255, 255, 0.72);
-    }
-
-    html {
-      height: 100%;
-      overflow: hidden;
-      overscroll-behavior: none;
+      --frame-outer-w: 390px;
+      --frame-outer-h: 844px;
+      --frame-design-w: 402px;
+      --frame-design-h: 874px;
     }
 
     body {
       margin: 0;
-      min-height: 100%;
-      min-height: 100svh;
-      overflow: hidden;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
       background: var(--light-bg);
       color: var(--light-body-text);
       font-family: var(--font-main);
-      /* Fits 402×874 “device” into view (incl. iPhone 14 Pro + safe area); no page scroll. */
-      --frame-scale: min(
-        1,
-        calc((100vw - env(safe-area-inset-left) - env(safe-area-inset-right) - 24px) / 402px),
-        calc((100svh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 24px) / 874px)
-      );
     }
 
     .frame {
-      position: fixed;
-      left: 50%;
-      top: 50%;
-      width: 402px;
-      height: 874px;
-      border-radius: var(--frame-radius);
+      position: relative;
+      width: var(--frame-outer-w);
+      height: var(--frame-outer-h);
+      border-radius: calc(var(--frame-radius) * 390 / 402);
       background: var(--light-bg);
       box-shadow: var(--shadow-frame);
       overflow: hidden;
-      transform: translate(-50%, -50%) scale(var(--frame-scale));
-      transform-origin: center center;
-      will-change: transform;
+    }
+
+    .frame-canvas {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: var(--frame-design-w);
+      height: var(--frame-design-h);
+      transform: scaleX(calc(var(--frame-outer-w) / var(--frame-design-w)))
+        scaleY(calc(var(--frame-outer-h) / var(--frame-design-h)));
+      transform-origin: top left;
     }
 
     .transparent-block {
@@ -164,6 +162,7 @@
 </head>
 <body>
   <div class="frame">
+    <div class="frame-canvas">
     <div id="intro1-1" class="transparent-block"></div>
     <div id="intro1-2" class="transparent-block"></div>
     <div id="intro1-3" class="box">
@@ -176,6 +175,7 @@
           <img src="Assets/Car.png?v=2" alt="" class="icon-screen-img" />
         </span>
       </a>
+    </div>
     </div>
   </div>
   <script>

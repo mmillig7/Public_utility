@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Offer</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -24,44 +24,43 @@
       --shadow-group-join-popup: 8px 8px 16px rgba(10, 13, 20, 0.72), -8px -8px 16px rgba(59, 71, 97, 0.34), inset 1px 1px 0 rgba(66, 82, 107, 0.3);
       --light-surface-elevated: #e3e6ee;
       --shadow-group-join-popup-light: 8px 8px 16px rgba(120, 132, 158, 0.2), -6px -6px 14px rgba(248, 249, 252, 0.55), inset 1px 1px 0 rgba(255, 255, 255, 0.36);
-    }
-
-    html {
-      height: 100%;
-      overflow: hidden;
-      overscroll-behavior: none;
+      --frame-outer-w: 390px;
+      --frame-outer-h: 844px;
+      --frame-design-w: 402px;
+      --frame-design-h: 874px;
     }
 
     body {
       margin: 0;
-      min-height: 100%;
-      min-height: 100svh;
-      overflow: hidden;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
       background: var(--dark-bg);
       font-family: Inter, Arial, sans-serif;
       transition: background-color 220ms var(--ease-smooth);
-      --frame-scale: min(
-        1,
-        calc((100vw - env(safe-area-inset-left) - env(safe-area-inset-right) - 24px) / 402px),
-        calc((100svh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 24px) / 874px)
-      );
     }
 
     .frame {
-      position: fixed;
-      left: 50%;
-      top: 50%;
-      width: 402px;
-      height: 874px;
-      border-radius: 40px;
+      position: relative;
+      width: var(--frame-outer-w);
+      height: var(--frame-outer-h);
+      border-radius: calc(40px * 390 / 402);
       background: var(--dark-bg);
       box-shadow: 14px 14px 28px rgba(10, 13, 20, 0.72), -14px -14px 28px rgba(59, 71, 97, 0.34);
       overflow: hidden;
       isolation: isolate;
       transition: background-color 220ms var(--ease-smooth), box-shadow 220ms var(--ease-smooth);
-      transform: translate(-50%, -50%) scale(var(--frame-scale));
-      transform-origin: center center;
-      will-change: transform;
+    }
+
+    .frame-canvas {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: var(--frame-design-w);
+      height: var(--frame-design-h);
+      transform: scaleX(calc(var(--frame-outer-w) / var(--frame-design-w)))
+        scaleY(calc(var(--frame-outer-h) / var(--frame-design-h)));
+      transform-origin: top left;
     }
 
     body.transition-to-request {
@@ -1888,6 +1887,7 @@
 </head>
 <body>
   <div class="frame">
+    <div class="frame-canvas">
     <div id="offer1-1" class="box">
       <button id="groupsToggle" class="groups-button" type="button" aria-expanded="false" aria-controls="groupsMenu">
         <span>Groups</span>
@@ -2091,6 +2091,7 @@
         <button type="button" id="profilePhotoEditCancel">Cancel</button>
       </div>
     </section>
+    </div>
   </div>
   <script>
     /* MapKit JS token: https://developer.apple.com/documentation/mapkitjs/creating-a-maps-token */

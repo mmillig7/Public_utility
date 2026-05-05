@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Onboarding</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -19,42 +19,41 @@
       --shadow-frame: 18px 18px 34px rgba(199, 206, 220, 0.82), -16px -16px 30px rgba(255, 255, 255, 0.98);
       --shadow-card: 12px 12px 22px rgba(193, 201, 214, 0.62), -10px -10px 20px rgba(255, 255, 255, 0.97), inset 1px 1px 0 rgba(255, 255, 255, 0.76);
       --shadow-slider: -2px 0 0 rgba(255, 255, 255, 0.68), 6px 8px 14px rgba(196, 203, 216, 0.36), inset 1px 1px 0 rgba(255, 255, 255, 0.62), inset -1px -1px 0 rgba(208, 214, 224, 0.34);
-    }
-
-    html {
-      height: 100%;
-      overflow: hidden;
-      overscroll-behavior: none;
+      --frame-outer-w: 390px;
+      --frame-outer-h: 844px;
+      --frame-design-w: 402px;
+      --frame-design-h: 874px;
     }
 
     body {
       margin: 0;
-      min-height: 100%;
-      min-height: 100svh;
-      overflow: hidden;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
       background: var(--light-bg);
       color: var(--light-body-text);
       font-family: var(--font-main);
-      --frame-scale: min(
-        1,
-        calc((100vw - env(safe-area-inset-left) - env(safe-area-inset-right) - 24px) / 402px),
-        calc((100svh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 24px) / 874px)
-      );
     }
 
     .frame {
-      position: fixed;
-      left: 50%;
-      top: 50%;
-      width: 402px;
-      height: 874px;
-      border-radius: var(--frame-radius);
+      position: relative;
+      width: var(--frame-outer-w);
+      height: var(--frame-outer-h);
+      border-radius: calc(var(--frame-radius) * 390 / 402);
       background: var(--light-bg);
       box-shadow: var(--shadow-frame);
       overflow: hidden;
-      transform: translate(-50%, -50%) scale(var(--frame-scale));
-      transform-origin: center center;
-      will-change: transform;
+    }
+
+    .frame-canvas {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: var(--frame-design-w);
+      height: var(--frame-design-h);
+      transform: scaleX(calc(var(--frame-outer-w) / var(--frame-design-w)))
+        scaleY(calc(var(--frame-outer-h) / var(--frame-design-h)));
+      transform-origin: top left;
     }
 
     .frame.page-slide-enter {
@@ -425,6 +424,7 @@
 </head>
 <body>
   <div class="frame">
+    <div class="frame-canvas">
     <div id="onboarding1-1" class="box">
       <p class="align-logo">Align</p>
     </div>
@@ -454,6 +454,7 @@
       <a href="request.html" class="car-link" aria-label="Go to request page">
         <img src="Assets/Car.png" alt="Car" class="car-image" />
       </a>
+    </div>
     </div>
   </div>
   <script>
