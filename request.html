@@ -43,13 +43,25 @@
     .frame {
       position: relative;
       width: 402px;
-      height: 874px;
+      height: min(874px, calc(100vh - 32px));
+      height: min(874px, calc(100svh - 32px));
       border-radius: 40px;
       background: var(--light-bg);
       box-shadow: 14px 14px 28px rgba(209, 214, 224, 0.7), -14px -14px 28px rgba(255, 255, 255, 0.95);
-      overflow: hidden;
+      overflow-x: hidden;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
       isolation: isolate;
       transition: background-color 220ms var(--ease-smooth), box-shadow 220ms var(--ease-smooth);
+    }
+
+    .frame::before {
+      content: "";
+      display: block;
+      width: 0;
+      height: 874px;
+      overflow: hidden;
+      pointer-events: none;
     }
 
     body.transition-to-offer {

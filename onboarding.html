@@ -34,11 +34,23 @@
     .frame {
       position: relative;
       width: 402px;
-      height: 874px;
+      height: min(874px, calc(100vh - 32px));
+      height: min(874px, calc(100svh - 32px));
       border-radius: var(--frame-radius);
       background: var(--light-bg);
       box-shadow: var(--shadow-frame);
+      overflow-x: hidden;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .frame::before {
+      content: "";
+      display: block;
+      width: 0;
+      height: 874px;
       overflow: hidden;
+      pointer-events: none;
     }
 
     .frame.page-slide-enter {
