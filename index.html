@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Intro</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -19,37 +19,41 @@
       --shadow-card: 8px 8px 16px rgba(200, 206, 217, 0.5), -8px -8px 16px rgba(255, 255, 255, 0.92), inset 1px 1px 0 rgba(255, 255, 255, 0.72);
     }
 
+    html {
+      height: 100%;
+      overflow: hidden;
+      overscroll-behavior: none;
+    }
+
     body {
       margin: 0;
-      min-height: 100vh;
-      display: grid;
-      place-items: center;
+      min-height: 100%;
+      min-height: 100svh;
+      overflow: hidden;
       background: var(--light-bg);
       color: var(--light-body-text);
       font-family: var(--font-main);
+      /* Fits 402×874 “device” into view (incl. iPhone 14 Pro + safe area); no page scroll. */
+      --frame-scale: min(
+        1,
+        calc((100vw - env(safe-area-inset-left) - env(safe-area-inset-right) - 24px) / 402px),
+        calc((100svh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 24px) / 874px)
+      );
     }
 
     .frame {
-      position: relative;
+      position: fixed;
+      left: 50%;
+      top: 50%;
       width: 402px;
-      height: min(874px, calc(100vh - 32px));
-      height: min(874px, calc(100svh - 32px));
+      height: 874px;
       border-radius: var(--frame-radius);
       background: var(--light-bg);
       box-shadow: var(--shadow-frame);
-      overflow-x: hidden;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    /* Absolute layout keeps 874px “canvas”; spacer gives scroll extent when frame is shorter. */
-    .frame::before {
-      content: "";
-      display: block;
-      width: 0;
-      height: 874px;
       overflow: hidden;
-      pointer-events: none;
+      transform: translate(-50%, -50%) scale(var(--frame-scale));
+      transform-origin: center center;
+      will-change: transform;
     }
 
     .transparent-block {
